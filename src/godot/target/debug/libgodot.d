@@ -1,1 +1,1 @@
-/home/victorrandall/projs/MineCraft/src/godot/target/debug/libgodot.so: /home/victorrandall/projs/MineCraft/src/godot/src/lib.rs
+/home/victorrandall/proj/MineCraft-clone-/src/godot/target/debug/libgodot.so: /home/victorrandall/proj/MineCraft-clone-/src/godot/src/lib.rs
