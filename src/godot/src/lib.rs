@@ -18,9 +18,8 @@ impl HelloWorld {
 	}
 	#[export]
 	fn _process(&self, owner: &Spatial, delta: f64){
-		godot_print!("_process (rust)\ndelta = {}", delta);
-		owner.get_node("Node/Label2").unwrap().cast::<Ref<Label>>().set_text("_process (rust)\ndelta = {}")
-//		println!("lul")
+		let mut st = gdnative::api::SurfaceTool::new();
+		
 	}
 }
 
@@ -29,3 +28,8 @@ fn init(handle: InitHandle) {
 }
 
 godot_init!(init);
+
+//?: como q faz pra pegar um node
+//unsafe {
+//	owner.get_node("../Label2").unwrap().assume_safe().cast::<Label>().unwrap().set_text(format!("_process (rust)\ndelta = {}",delta.to_string()))
+//}
