@@ -1,30 +1,27 @@
 use gdnative::prelude::*;
 
 #[derive(NativeClass)]
-#[inherit(Node)]
+#[inherit(Spatial)]
 pub struct HelloWorld;
 
 #[methods]
 impl HelloWorld {
 //	let test:str = "rust"
 	    
-	fn new(_owner: &Node) -> Self {
+	fn new(_owner: &Spatial) -> Self {
 		HelloWorld
 	}
 
 	#[export]
-	fn _ready(&self, _owner: &Node) {
+	fn _ready(&self, _owner: &Spatial) {
 		godot_print!("_ready (rust)");
 	}
-//	#[export]
-//	fn _process(&self, _owner: &Node, delta: f64){
-//		godot_print!("_process (rust)");
-//	}
-//	#[export]
-//	fn penis(){
-//		godot_print!("penis")
-//	}
-	fn LabelPrint()
+	#[export]
+	fn _process(&self, owner: &Spatial, delta: f64){
+		godot_print!("_process (rust)\ndelta = {}", delta);
+		owner.get_node("Node/Label2").unwrap().cast::<Ref<Label>>().set_text("_process (rust)\ndelta = {}")
+//		println!("lul")
+	}
 }
 
 fn init(handle: InitHandle) {

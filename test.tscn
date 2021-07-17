@@ -10,19 +10,22 @@ script = ExtResource( 1 )
 script = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="Node"]
-margin_right = 40.0
-margin_bottom = 14.0
+margin_right = 171.0
+margin_bottom = 91.0
 rect_scale = Vector2( 3, 3 )
-text = "sinep"
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label2" type="Label" parent="Node"]
-margin_right = 40.0
-margin_bottom = 14.0
+margin_top = 316.0
+margin_right = 171.0
+margin_bottom = 411.0
 rect_scale = Vector2( 3, 3 )
-text = "penis"
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Node2D" type="Node2D" parent="Node"]
