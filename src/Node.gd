@@ -9,7 +9,10 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta) -> void:
 	printL("_process (gdscript) \ndelta = " + str(delta))
-	pass
+	pos()
 
 func printL(msg:String):
 	$Label.text = msg
+
+func pos():
+	get_node("Spatial/StaticBody/Position3D").translation = get_node("Spatial/KinematicBody").translation / get_node("Spatial/StaticBody").scale

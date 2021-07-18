@@ -1,4 +1,5 @@
 use gdnative::prelude::*;
+use vector2d::Vector2D;
 
 #[derive(NativeClass)]
 #[inherit(Spatial)]
@@ -6,8 +7,6 @@ pub struct HelloWorld;
 
 #[methods]
 impl HelloWorld {
-//	let test:str = "rust"
-	    
 	fn new(_owner: &Spatial) -> Self {
 		HelloWorld
 	}
@@ -19,7 +18,8 @@ impl HelloWorld {
 	#[export]
 	fn _process(&self, owner: &Spatial, delta: f64){
 		let mut st = gdnative::api::SurfaceTool::new();
-		
+		st.begin(gdnative::api::Mesh::PRIMITIVE_TRIANGLES)
+		st.add_uv
 	}
 }
 

@@ -1,31 +1,45 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/godot_test.gdns" type="Script" id=1]
 [ext_resource path="res://src/Node.gd" type="Script" id=2]
+[ext_resource path="res://KinematicBody.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/blocks.tres" type="Material" id=4]
 
-[node name="Spatial" type="Spatial"]
-script = ExtResource( 1 )
+[sub_resource type="CubeMesh" id=1]
 
-[node name="Node" type="Node" parent="."]
+[sub_resource type="Skin" id=2]
+
+[node name="Node" type="Node"]
 script = ExtResource( 2 )
 
-[node name="Label" type="Label" parent="Node"]
-margin_right = 171.0
+[node name="Label" type="Label" parent="."]
+margin_right = 123.0
 margin_bottom = 91.0
 rect_scale = Vector2( 3, 3 )
-autowrap = true
+text = "_process (gdscript) 
+delta = 0.015278"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label2" type="Label" parent="Node"]
-margin_top = 316.0
-margin_right = 171.0
-margin_bottom = 411.0
+[node name="Label2" type="Label" parent="."]
+margin_left = 363.0
+margin_right = 583.0
+margin_bottom = 31.0
 rect_scale = Vector2( 3, 3 )
-autowrap = true
+text = "_process (rust)
+delta = 0.01527777872979641"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Node2D" type="Node2D" parent="Node"]
+[node name="Spatial" type="Spatial" parent="."]
+script = ExtResource( 1 )
+
+[node name="KinematicBody" parent="Spatial" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 56.0676, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial"]
+mesh = SubResource( 1 )
+skin = SubResource( 2 )
+material/0 = ExtResource( 4 )
