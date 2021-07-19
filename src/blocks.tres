@@ -4,7 +4,5 @@
 
 [resource]
 flags_transparent = true
-flags_world_triplanar = true
 albedo_texture = ExtResource( 1 )
-uv1_triplanar = true
 uv2_triplanar = true

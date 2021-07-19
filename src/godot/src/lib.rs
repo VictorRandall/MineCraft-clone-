@@ -1,14 +1,13 @@
 use gdnative::prelude::*;
-use vector2d::Vector2D;
 
 #[derive(NativeClass)]
 #[inherit(Spatial)]
-pub struct HelloWorld;
+pub struct VoxelWorld;
 
 #[methods]
-impl HelloWorld {
+impl VoxelWorld {
 	fn new(_owner: &Spatial) -> Self {
-		HelloWorld
+		VoxelWorld
 	}
 
 	#[export]
@@ -19,12 +18,12 @@ impl HelloWorld {
 	fn _process(&self, owner: &Spatial, delta: f64){
 		let mut st = gdnative::api::SurfaceTool::new();
 		st.begin(gdnative::api::Mesh::PRIMITIVE_TRIANGLES)
-		st.add_uv
+//		st.add_uv
 	}
 }
 
 fn init(handle: InitHandle) {
-	handle.add_tool_class::<HelloWorld>();
+	handle.add_tool_class::<VoxelWorld>();
 }
 
 godot_init!(init);
