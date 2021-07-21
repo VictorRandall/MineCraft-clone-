@@ -15,10 +15,10 @@ impl VoxelWorld {
 		godot_print!("_ready (rust)");
 	}
 	#[export]
-	fn _process(&self, owner: &Spatial, delta: f64){
-		let mut st = gdnative::api::SurfaceTool::new();
+	fn _process(&self, _owner: &Spatial, _delta: f64){
+		let st = gdnative::api::SurfaceTool::new();
 		st.begin(gdnative::api::Mesh::PRIMITIVE_TRIANGLES)
-//		st.add_uv
+//		st.add_uv(Vector2(0.0,1.0))
 	}
 }
 
