@@ -1,11 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://src/godot_test.gdns" type="Script" id=1]
 [ext_resource path="res://src/Node.gd" type="Script" id=2]
-[ext_resource path="res://src/blocks.tres" type="Material" id=4]
-[ext_resource path="res://teste.tscn" type="PackedScene" id=5]
-
-[sub_resource type="CubeMesh" id=1]
 
 [node name="Node" type="Node"]
 script = ExtResource( 2 )
@@ -34,15 +30,7 @@ __meta__ = {
 [node name="Spatial" type="Spatial" parent="."]
 script = ExtResource( 1 )
 
-[node name="MeshInstance" parent="Spatial" instance=ExtResource( 5 )]
-transform = Transform( 3, 0, 0, 0, 3, 0, 0, 0, 3, -0.000390222, -0.000489861, 0.000478397 )
-mesh = null
-
 [node name="Camera" type="Camera" parent="Spatial"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 2.454, 6.262, 1.308 )
 
-[node name="MeshInstance" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.382595, 0, 0 )
-visible = false
-mesh = SubResource( 1 )
-material/0 = ExtResource( 4 )
+[node name="MeshInstance" type="MeshInstance" parent="Spatial"]

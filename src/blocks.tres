@@ -5,5 +5,4 @@
 [resource]
 flags_transparent = true
 albedo_texture = ExtResource( 1 )
-uv1_scale = Vector3( 0.25, 0.25, 0.25 )
 uv2_triplanar = true

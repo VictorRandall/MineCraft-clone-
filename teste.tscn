@@ -6,7 +6,7 @@
 [sub_resource type="ArrayMesh" id=1]
 surfaces/0 = {
 "aabb": AABB( 0, 1, 0, 1, 1.00136e-05, 1 ),
-"array_data": PoolByteArray( 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 127, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 0, 0, 0, 0 ),
+"array_data": PoolByteArray( 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 127, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 127, 0, 0, 0, 52, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 0, 0, 0, 52, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 0, 0, 0, 52, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 127, 0, 0, 0, 52, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 0, 52, 0, 52 ),
 "array_index_data": PoolByteArray(  ),
 "blend_shape_data": [  ],
 "format": 97299,
@@ -14,11 +14,11 @@ surfaces/0 = {
 "material": ExtResource( 2 ),
 "primitive": 4,
 "skeleton_aabb": [  ],
-"vertex_count": 3
+"vertex_count": 6
 }
 
 [node name="MeshInstance" type="MeshInstance"]
-transform = Transform( 4.58011, 0, 0, 0, 1, 0, 0, 0, 3.37863, -0.000390222, -0.000489861, 0.000478397 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0 )
 mesh = SubResource( 1 )
 material/0 = null
 script = ExtResource( 1 )
