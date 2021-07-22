@@ -21,7 +21,9 @@ impl VoxelWorld {
 	fn _process(&self, owner: &Spatial, _delta: f64){
 //		return
 		let st = gdnative::api::SurfaceTool::new();
+		let arraymesh = gdnative::api::ArrayMesh::new();
 		st.begin(gdnative::api::Mesh::PRIMITIVE_TRIANGLES);
+
 		st.add_uv(Vector2::new(0.0, 0.0));
 		st.add_vertex(Vector3::new(0.0,1.0,0.0));
 		st.add_uv(Vector2::new(0.25, 0.0));
@@ -37,7 +39,7 @@ impl VoxelWorld {
 		st.add_vertex(Vector3::new(0.0,0.0,0.0));
 		
 		st.generate_normals(false);
-		owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().mesh = st.commit(_,_);
+		owner.get_node("MeshInstance").unwrap().assume_safe().cast::<gdnative::api::MeshInstance>().unwrap().set_mesh(st.commit(arraymesh));
 	}
 }
 
@@ -51,5 +53,14 @@ godot_init!(init);
 //unsafe {
 //	owner.get_node(NodePath).unwrap().assume_safe().cast::<NodeType>().unwrap()
 //}
-//?: como juntar/transformar duas strings/int/float/etc em uma string so
+//?: como juntar/transformar duas strings/int/float/etc em uma so string
 //format!()
+
+
+
+
+
+
+
+
+
