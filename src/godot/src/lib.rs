@@ -6,6 +6,17 @@ use gdnative::prelude::*;
 //mod voxelchunk;
 
 pub struct VoxelWorld;
+pub struct VoxelChunk {
+	position:[f32, 3],
+	data:[u16,4096]
+};
+
+
+impl VoxelChunk {
+	fn new(_owner: &StaticBody) -> Self {
+		VoxelChunk
+	}
+}
 
 #[methods]
 impl VoxelWorld {
@@ -21,7 +32,7 @@ impl VoxelWorld {
 	fn _process(&self, owner: &Spatial, _delta: f64){
 //		return
 		let st = gdnative::api::SurfaceTool::new();
-		let arraymesh = gdnative::api::ArrayMesh::new();
+//		let arraymesh = gdnative::api::ArrayMesh::new();
 		st.begin(gdnative::api::Mesh::PRIMITIVE_TRIANGLES);
 
 		st.add_uv(Vector2::new(0.0, 0.0));
@@ -39,7 +50,7 @@ impl VoxelWorld {
 		st.add_vertex(Vector3::new(0.0,0.0,0.0));
 		
 		st.generate_normals(false);
-		owner.get_node("MeshInstance").unwrap().assume_safe().cast::<gdnative::api::MeshInstance>().unwrap().set_mesh(st.commit(arraymesh));
+		unsafe {owner.get_node("MeshInstance").unwrap().assume_safe().cast::<gdnative::api::MeshInstance>().unwrap().set_mesh(st.commit())};
 	}
 }
 
