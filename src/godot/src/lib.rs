@@ -5,11 +5,11 @@ use gdnative::prelude::*;
 
 //mod voxelchunk;
 
-pub struct VoxelWorld;
 pub struct VoxelChunk {
 	position:[f32, 3],
 	data:[u16,4096]
-};
+}
+pub struct VoxelWorld;
 
 
 impl VoxelChunk {
