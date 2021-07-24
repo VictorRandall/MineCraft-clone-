@@ -24,6 +24,7 @@ impl VoxelWorld {
 		VoxelWorld
 	}
 
+
 	#[export]
 	fn _ready(&self, _owner: &Node) {
 		godot_print!("_ready (rust)");
@@ -31,33 +32,120 @@ impl VoxelWorld {
 	#[export]
 	fn _process(&self, owner: &Node, _delta: f64){
 //		return
-		let st = gdnative::api::SurfaceTool::new();
+		let st = SurfaceTool::new();
 //		let arraymesh = gdnative::api::ArrayMesh::new();
-		st.begin(gdnative::api::Mesh::PRIMITIVE_TRIANGLES);
+		st.begin(Mesh::PRIMITIVE_TRIANGLES);
+//		st.
 
-		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(0.0,1.0,0.0));
-		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(1.0,1.0,0.0));
-		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(0.0,1.0,1.0));
+		cube(st);
 
-		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(0.0,0.0,0.0));
-		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(0.0,0.0,0.0));
-		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(0.0,0.0,0.0));
-		
+//		end();
 		st.generate_normals(false);
-		let mesh: Ref<ArrayMesh> = st.commit(gdnative::Null::null(), gdnative::api::Mesh::ARRAY_COMPRESS_DEFAULT).unwrap();
-		unsafe {owner.get_node("MeshInstance").unwrap().assume_safe().cast::<gdnative::api::MeshInstance>().unwrap().set_mesh(mesh)};
+		let mesh: Ref<ArrayMesh> = st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT).unwrap();
+		unsafe {owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(mesh)};
 	}
+
 }
 
 fn init(handle: InitHandle) {
 	handle.add_tool_class::<VoxelWorld>();
 }
+
+fn cube(st:gdnative::Ref<SurfaceTool, gdnative::prelude::Unique>){
+	//top
+	st.add_uv(Vector2::new(0.0, 0.0));
+	st.add_vertex(Vector3::new(0.0,1.0,0.0));
+	st.add_uv(Vector2::new(0.25, 0.0));
+	st.add_vertex(Vector3::new(1.0,1.0,0.0));
+	st.add_uv(Vector2::new(0.0, 0.25));
+	st.add_vertex(Vector3::new(0.0,1.0,1.0));
+
+	st.add_uv(Vector2::new(0.0, 0.25));
+	st.add_vertex(Vector3::new(0.0,1.0,1.0));
+	st.add_uv(Vector2::new(0.25, 0.0));
+	st.add_vertex(Vector3::new(1.0,1.0,0.0));
+	st.add_uv(Vector2::new(0.25, 0.25));
+	st.add_vertex(Vector3::new(1.0,1.0,1.0));
+		
+	//botton
+	st.add_uv(Vector2::new(0.0, 0.25));
+	st.add_vertex(Vector3::new(0.0,0.0,1.0));
+	st.add_uv(Vector2::new(0.25, 0.0));
+	st.add_vertex(Vector3::new(1.0,0.0,0.0));
+	st.add_uv(Vector2::new(0.0, 0.0));
+	st.add_vertex(Vector3::new(0.0,0.0,0.0));
+
+	st.add_uv(Vector2::new(0.0, 0.25));
+	st.add_vertex(Vector3::new(1.0,0.0,1.0));
+	st.add_uv(Vector2::new(0.25, 0.0));
+	st.add_vertex(Vector3::new(1.0,0.0,0.0));
+	st.add_uv(Vector2::new(0.25, 0.25));
+	st.add_vertex(Vector3::new(0.0,0.0,1.0));
+
+//	left
+	st.add_uv(Vector2::new(0.0, 0.25));
+	st.add_vertex(Vector3::new(1.0,0.0,0.0));
+	st.add_uv(Vector2::new(0.25, 0.0));
+	st.add_vertex(Vector3::new(1.0,0.0,1.0));
+	st.add_uv(Vector2::new(0.0, 0.0));
+	st.add_vertex(Vector3::new(1.0,1.0,0.0));
+
+	st.add_uv(Vector2::new(0.0, 0.25));
+	st.add_vertex(Vector3::new(1.0,0.0,1.0));
+	st.add_uv(Vector2::new(0.25, 0.0));
+	st.add_vertex(Vector3::new(1.0,1.0,1.0));
+	st.add_uv(Vector2::new(0.25, 0.25));
+	st.add_vertex(Vector3::new(1.0,1.0,0.0));
+
+//	right
+	st.add_uv(Vector2::new(0.0, 0.25));
+	st.add_vertex(Vector3::new(0.0,1.0,0.0));
+	st.add_uv(Vector2::new(0.25, 0.0));
+	st.add_vertex(Vector3::new(0.0,0.0,1.0));
+	st.add_uv(Vector2::new(0.0, 0.0));
+	st.add_vertex(Vector3::new(0.0,0.0,0.0));
+
+	st.add_uv(Vector2::new(0.0, 0.25));
+	st.add_vertex(Vector3::new(0.0,1.0,1.0));
+	st.add_uv(Vector2::new(0.25, 0.0));
+	st.add_vertex(Vector3::new(0.0,0.0,1.0));
+	st.add_uv(Vector2::new(0.25, 0.25));
+	st.add_vertex(Vector3::new(0.0,1.0,0.0));
+	
+//	front
+	st.add_uv(Vector2::new(0.0, 0.25));
+	st.add_vertex(Vector3::new(0.0,0.0,1.0));
+	st.add_uv(Vector2::new(0.25, 0.0));
+	st.add_vertex(Vector3::new(0.0,1.0,1.0));
+	st.add_uv(Vector2::new(0.0, 0.0));
+	st.add_vertex(Vector3::new(1.0,0.0,1.0));
+
+	st.add_uv(Vector2::new(0.0, 0.25));
+	st.add_vertex(Vector3::new(1.0,0.0,1.0));
+	st.add_uv(Vector2::new(0.25, 0.0));
+	st.add_vertex(Vector3::new(0.0,1.0,1.0));
+	st.add_uv(Vector2::new(0.25, 0.25));
+	st.add_vertex(Vector3::new(1.0,1.0,1.0));
+
+//	back
+	st.add_uv(Vector2::new(0.0, 0.25));
+	st.add_vertex(Vector3::new(1.0,0.0,0.0));
+	st.add_uv(Vector2::new(0.25, 0.0));
+	st.add_vertex(Vector3::new(0.0,1.0,0.0));
+	st.add_uv(Vector2::new(0.0, 0.0));
+	st.add_vertex(Vector3::new(0.0,0.0,0.0));
+
+	st.add_uv(Vector2::new(0.0, 0.25));
+	st.add_vertex(Vector3::new(1.0,1.0,0.0));
+	st.add_uv(Vector2::new(0.25, 0.0));
+	st.add_vertex(Vector3::new(0.0,1.0,0.0));
+	st.add_uv(Vector2::new(0.25, 0.25));
+	st.add_vertex(Vector3::new(1.0,0.0,0.0));
+}
+
+//fn end(){
+//	
+//}
 
 godot_init!(init);
 
