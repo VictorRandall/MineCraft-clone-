@@ -1,8 +1,21 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://src/godot_test.gdns" type="Script" id=1]
 [ext_resource path="res://src/Node.gd" type="Script" id=2]
 [ext_resource path="res://teste.tscn" type="PackedScene" id=3]
+
+[sub_resource type="ArrayMesh" id=1]
+surfaces/0 = {
+"aabb": AABB( 0, 0, 0, 1, 1.00001, 1 ),
+"array_data": PoolByteArray( 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 127, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 0, 0, 0, 127, 0, 0, 0, 52, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 127, 0, 0, 0, 0, 0, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ),
+"array_index_data": PoolByteArray(  ),
+"blend_shape_data": [  ],
+"format": 97299,
+"index_count": 0,
+"primitive": 4,
+"skeleton_aabb": [  ],
+"vertex_count": 6
+}
 
 [node name="Node" type="Node"]
 script = ExtResource( 2 )
@@ -35,7 +48,9 @@ script = ExtResource( 1 )
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 2.454, 6.262, 1.308 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Spatial"]
-visible = false
+mesh = SubResource( 1 )
+material/0 = null
 
 [node name="MeshInstance2" parent="Spatial" instance=ExtResource( 3 )]
+mesh = null
 id = Vector2( 3, 0 )

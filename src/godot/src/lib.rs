@@ -1,35 +1,35 @@
+use gdnative::api::{ArrayMesh, Mesh, MeshInstance, OpenSimplexNoise, SurfaceTool, Spatial};
 use gdnative::prelude::*;
 
 #[derive(NativeClass)]
-#[inherit(Spatial)]
-
+#[inherit(Node)]
 //mod voxelchunk;
 
-pub struct VoxelChunk {
-	position:[f32, 3],
-	data:[u16,4096]
-}
+//pub struct VoxelChunk {
+//	position:[f32, 3],
+//	data:[u16,4096]
+//}
 pub struct VoxelWorld;
-
-
-impl VoxelChunk {
-	fn new(_owner: &StaticBody) -> Self {
-		VoxelChunk
-	}
-}
+//
+//
+//impl VoxelChunk {
+//	fn new(_owner: &StaticBody) -> Self {
+//		VoxelChunk
+//	}
+//}
 
 #[methods]
 impl VoxelWorld {
-	fn new(_owner: &Spatial) -> Self {
+	fn new(_owner: &Node) -> Self {
 		VoxelWorld
 	}
 
 	#[export]
-	fn _ready(&self, _owner: &Spatial) {
+	fn _ready(&self, _owner: &Node) {
 		godot_print!("_ready (rust)");
 	}
 	#[export]
-	fn _process(&self, owner: &Spatial, _delta: f64){
+	fn _process(&self, owner: &Node, _delta: f64){
 //		return
 		let st = gdnative::api::SurfaceTool::new();
 //		let arraymesh = gdnative::api::ArrayMesh::new();
@@ -50,7 +50,8 @@ impl VoxelWorld {
 		st.add_vertex(Vector3::new(0.0,0.0,0.0));
 		
 		st.generate_normals(false);
-		unsafe {owner.get_node("MeshInstance").unwrap().assume_safe().cast::<gdnative::api::MeshInstance>().unwrap().set_mesh(st.commit())};
+		let mesh: Ref<ArrayMesh> = st.commit(gdnative::Null::null(), gdnative::api::Mesh::ARRAY_COMPRESS_DEFAULT).unwrap();
+		unsafe {owner.get_node("MeshInstance").unwrap().assume_safe().cast::<gdnative::api::MeshInstance>().unwrap().set_mesh(mesh)};
 	}
 }
 
