@@ -26,9 +26,9 @@ pub struct VoxelWorld{
 impl VoxelWorld {
 	fn new(_owner: &Node) -> Self {
 		VoxelWorld{
-			size_x: 2,
-			size_y: 2,
-			size_z: 2,
+			size_x: 16,
+			size_y: 16,
+			size_z: 16,
 		}
 	}
 
@@ -38,21 +38,30 @@ impl VoxelWorld {
 		godot_print!("_ready (rust)");
 	}
 	#[export]
-	fn _process(&self, owner: &Node, _delta: f64){
+	fn _process(&mut self, owner: &Node, _delta: f64){
+		let input = Input::godot_singleton();
 		let st = SurfaceTool::new();
-		st.begin(Mesh::PRIMITIVE_TRIANGLES);
+		let mut array = TypedArray::new();
+//		st.begin(Mesh::PRIMITIVE_TRIANGLES);
+		st.begin(Mesh::PRIMITIVE_LINES);
 //		st.add_smooth_group(true);
+//		
+//		if input.is_action_just_pressed("test"){
+//			self.size_x = 3
+//		}else if input.is_action_just_pressed("test2"){
+//			self.size_x = 6
+//		}
 		
 		for x in self.size_x - (self.size_x * 2)..self.size_x / 2{
 			for y in self.size_y - (self.size_y * 2)..self.size_y / 2{
 				for z in self.size_z - (self.size_z * 2)..self.size_z / 2{
-					cube(&st, Vector3::new(x as f32,y as f32,z as f32));
+					cube(&mut array,&st, Vector3::new(x as f32,y as f32,z as f32));
 				}
 			}
 		}
 		st.generate_normals(false);
 		let mesh: Ref<ArrayMesh> = st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT).unwrap();
-		unsafe {owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(mesh)};
+//		unsafe {owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(mesh)};
 	}
 
 }
@@ -61,7 +70,7 @@ fn init(handle: InitHandle) {
 	handle.add_tool_class::<VoxelWorld>();
 }
 
-fn cube(st:&Ref<SurfaceTool, Unique>, pos:Vector3){
+fn cube(data:&mut gdnative::core_types::TypedArray<i32>,st:&Ref<SurfaceTool, Unique>, pos:Vector3){
 	
 	let modi_x:f32 = pos.x;
 	let modi_y:f32 = pos.y;
@@ -69,6 +78,10 @@ fn cube(st:&Ref<SurfaceTool, Unique>, pos:Vector3){
 
 	let modi_uv_x:f32 = 0.0;
 	let modi_uv_x:f32 = 0.0;
+
+	data.insert(0,1);
+
+
 
 	//top
 	st.add_uv(Vector2::new(0.0, 0.0));
