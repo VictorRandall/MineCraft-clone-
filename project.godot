@@ -15,13 +15,9 @@ _global_script_class_icons={
 
 [application]
 
-config/name="test"
-run/main_scene="res://Spatial.tscn"
+config/name="New Game Project"
 config/icon="res://icon.png"
 
 [rendering]
 
-quality/driver/driver_name="GLES2"
-vram_compression/import_etc=true
-vram_compression/import_etc2=false
 environment/default_environment="res://default_env.tres"
