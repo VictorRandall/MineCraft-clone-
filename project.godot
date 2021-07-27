@@ -8,15 +8,25 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "CollisionShape",
+"class": "VoxelChunk",
+"language": "GDScript",
+"path": "res://src/voxel_chunk.gd"
+} ]
 _global_script_class_icons={
-
+"VoxelChunk": ""
 }
 
 [application]
 
 config/name="New Game Project"
+run/main_scene="res://Spatial.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/always_on_top=true
 
 [rendering]
 
