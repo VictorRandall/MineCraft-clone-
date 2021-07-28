@@ -3,11 +3,8 @@
 .import/
 export.cfg
 export_presets.cfg
-src/VoxelTool/target/debug/build
-src/VoxelTool/target/debug/deps
-src/VoxelTool/target/debug/examples
-src/VoxelTool/target/debug/incremental
-src/VoxelTool/target/debug/.fingerprint
+src/VoxelTool/target/
+src/godot/target/
 
 
 # Mono-specific ignores

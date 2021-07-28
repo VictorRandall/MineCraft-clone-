@@ -30,4 +30,10 @@ window/size/always_on_top=true
 
 [rendering]
 
+<<<<<<< HEAD
+=======
+quality/driver/driver_name="GLES2"
+vram_compression/import_etc=true
+vram_compression/import_etc2=false
+>>>>>>> notglitch
 environment/default_environment="res://default_env.tres"

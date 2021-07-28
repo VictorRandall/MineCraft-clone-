@@ -1,36 +1,35 @@
 use gdnative::api::{ArrayMesh, Mesh, MeshInstance, OpenSimplexNoise, SurfaceTool, Spatial, StaticBody};
 use gdnative::prelude::*;
 
-//#[derive(NativeClass)]
-//#[inherit(StaticBody)]
-//#[register_with(Self::register_properties)]
-//#[inherit(StaticBody)]
-//mod voxelchunk;
-//
-//pub struct VoxelChunk {
-//	position:f32,
-//	data:f32,
-//}
-//
-//#[methods]
-//impl VoxelChunk {
-//	fn new(_owner: &StaticBody) -> Self {
-//		VoxelChunk{
-//			position: 1.0,
-//			data: 1.0,
-//		}
-//	}
-//} 
+
+pub struct VoxelChunk{
+	pos:Vector3,
+	size_x:i32,
+	size_y:i32,
+	size_z:i32,
+}
+
+impl VoxelChunk{
+	fn new(position:Vector3, size_X:i32, size_Y:i32, size_Z:i32) -> Self {
+		VoxelChunk{
+			pos:position,
+			size_x:size_X,
+			size_y:size_Y,
+			size_z:size_Z,
+		}
+	}
+	
+}
 
 #[derive(NativeClass)]
 #[inherit(Spatial)]
-#[register_with(Self::register_properties)]
+
 
 pub struct VoxelWorld{
 	size_x:i32,
 	size_y:i32,
 	size_z:i32,
-}
+} 
 
 #[methods]
 impl VoxelWorld {
@@ -51,11 +50,11 @@ impl VoxelWorld {
 	fn _process(&mut self, owner: &Spatial, _delta: f64){
 		let input = Input::godot_singleton();
 		let st = SurfaceTool::new();
-//		let mut array = TypedArray::new();
+
 //		st.begin(Mesh::PRIMITIVE_TRIANGLES);
 		st.begin(Mesh::PRIMITIVE_LINES);
-//		st.add_smooth_group(true);
-//		
+		
+		
 		if input.is_action_just_pressed("test"){
 			self.size_x += 1;
 			self.size_y += 1;
@@ -67,12 +66,10 @@ impl VoxelWorld {
 		}
 		
 
-		//this block was commented to experiment add_triangle_fan in line 208
-		for x in 0..self.size_x{
-			for y in 0..self.size_y{
-				for z in 0..self.size_z{
+		for x in self.size_x - (self.size_x * 2)..self.size_x / 2{
+			for y in self.size_y - (self.size_y * 2)..self.size_y / 2{
+				for z in self.size_z - (self.size_z * 2)..self.size_z / 2{
 					cube(&st, Vector3::new(x as f32,y as f32,z as f32));
-					godot_print!("created block number Vector3({},{},{})!", x,y,z)
 				}
 			}
 		}
@@ -100,10 +97,8 @@ fn cube(st:&Ref<SurfaceTool, Unique>, pos:Vector3){
 	let modi_z:f32 = pos.z;
 
 	let modi_uv_x:f32 = 0.0;
-	let modi_uv_x:f32 = 0.0;
+	let modi_uv_y:f32 = 0.0;
 
-//	data.insert(0,1);
-//	godot_print!("{}",data);
 
 
 	//top
@@ -198,27 +193,3 @@ fn cube(st:&Ref<SurfaceTool, Unique>, pos:Vector3){
 }
 
 godot_init!(init);
-
-//?: como q faz pra pegar um node
-//unsafe {
-//	owner.get_node(NodePath).unwrap().assume_safe().cast::<NodeType>().unwrap()
-//}
-//?: como juntar/transformar duas strings/int/float/etc em uma so string
-//format!()
-//try using add_triangle_fan
-//	st.add_triangle_fan(
-//		TypedArray::<Vector3>(Vector3::new(0.0,1.0,0.0),Vector3::new(0.0,1.0,0.0),Vector3::new(0.0,1.0,1.0)),
-//		TypedArray::<Vector2>(Vector2::new(0.0,0.0),Vector2::new(1.0,0.0),Vector2::new(1.0,1.0)),
-//		gdnative::Null::null(),
-//		gdnative::Null::null(),
-//		gdnative::Null::null(),
-//		gdnative::Null::null()
-//	);
-
-
-
-
-
-
-
-
