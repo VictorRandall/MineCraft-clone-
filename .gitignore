@@ -3,8 +3,9 @@
 .import/
 export.cfg
 export_presets.cfg
+
+# rust files
 src/VoxelTool/target/
-src/godot/target/
 
 
 # Mono-specific ignores
