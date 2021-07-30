@@ -30,12 +30,7 @@ impl VoxelWorld {
 	#[export]
 	fn _process(&mut self, owner: &Spatial, _delta: f64){
 		let input = Input::godot_singleton();
-		
-
-
-		let chunk = VoxelChunk::new(owner,Vector3::new(0.0,0.0,0.0),1,1,1);
-	
-//		
+		let chunk = VoxelChunk::new(Vector3::new(0.0,0.0,0.0),1,1,1,owner);
 		
 		if input.is_action_just_pressed("test"){
 			self.size_x += 1;
@@ -57,27 +52,32 @@ pub struct VoxelChunk{
 	size_x:i32,
 	size_y:i32,
 	size_z:i32,
+	owner:&Spatial
 }
 
-impl VoxelChunk{
-	fn new(position:Vector3, s_x:i32, s_y:i32, s_z:i32) -> Self {
-		VoxelChunk{
+//#[methods]
+impl<'a> VoxelChunk<'a>{
+	fn new(position:Vector3, s_x:i32, s_y:i32, s_z:i32,ow:&Spatial) -> Self {
+		VoxelChunk<'a>{
 			pos:position,
 			size_x:s_x,
 			size_y:s_y,
 			size_z:s_z,
+			owner:ow
 		}
 	}
 
-	fn set_size(&self,s_x:i32,s_y:i32,s_z:i32){
-		
+	fn set_size(&mut self,s_x:i32,s_y:i32,s_z:i32){
+		self.size_x = s_x;
+		self.size_y = s_y;
+		self.size_z = s_z;
 	}
 
-	fn start(){
-		
-		
-	}
-
+//	fn start(){
+//		
+//		
+//	}
+//
 	fn update(&self){
 		let st = SurfaceTool::new();
 
@@ -88,7 +88,7 @@ impl VoxelChunk{
 		for x in 0..self.size_x{
 			for y in 0..self.size_y{
 				for z in 0..self.size_z{
-					custom_voxel(&st, Vector3::new(x as f32,y as f32,z as f32));
+					VoxelChunk::custom_voxel(&st, Vector3::new(x as f32,y as f32,z as f32));
 				}
 			}
 		}
@@ -121,91 +121,91 @@ impl VoxelChunk{
 		st.add_uv(Vector2::new(0.0, 0.0));
 		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(1.0+modi_x,1.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
 		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(0.0+modi_x,1.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
 
 		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(0.0+modi_x,1.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(1.0+modi_x,1.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.25));
-		st.add_vertex(Vector3::new(1.0+modi_x,1.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
 			
 		//botton
 		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(0.0+modi_x,0.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(1.0+modi_x,0.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(0.0+modi_x,0.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,0.0+offset_z));
 
 		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(1.0+modi_x,0.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(1.0+modi_x,0.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.25));
-		st.add_vertex(Vector3::new(0.0+modi_x,0.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 
 	//	left
 		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(1.0+modi_x,0.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(1.0+modi_x,0.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(1.0+modi_x,1.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
 
 		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(1.0+modi_x,0.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(1.0+modi_x,1.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.25));
-		st.add_vertex(Vector3::new(1.0+modi_x,1.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
 
 	//	right
 		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(0.0+modi_x,1.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+modi_x,0.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(0.0+modi_x,0.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,0.0+offset_z));
 
 		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(0.0+modi_x,1.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+modi_x,0.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.25));
-		st.add_vertex(Vector3::new(0.0+modi_x,1.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 		
 	//	front
 		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(0.0+modi_x,0.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+modi_x,1.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(1.0+modi_x,0.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
 
 		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(1.0+modi_x,0.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+modi_x,1.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.25));
-		st.add_vertex(Vector3::new(1.0+modi_x,1.0+modi_y,1.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
 
 	//	back
 		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(1.0+modi_x,0.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+modi_x,1.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(0.0+modi_x,0.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,0.0+offset_z));
 
 		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(1.0+modi_x,1.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+modi_x,1.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 		st.add_uv(Vector2::new(0.25, 0.25));
-		st.add_vertex(Vector3::new(1.0+modi_x,0.0+modi_y,0.0+modi_z));
+		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 	}
 }
 
