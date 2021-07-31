@@ -6,20 +6,12 @@ use gdnative::prelude::*;
 #[inherit(Spatial)]
 
 
-pub struct VoxelWorld{
-	size_x:i32,
-	size_y:i32,
-	size_z:i32,
-} 
+pub struct VoxelWorld;
 
 #[methods]
 impl VoxelWorld {
 	fn new(_owner: &Spatial) -> Self {
-		VoxelWorld{
-			size_x: 1,
-			size_y: 1,
-			size_z: 1,
-		}
+		VoxelWorld
 	}
 
 
@@ -30,55 +22,58 @@ impl VoxelWorld {
 	#[export]
 	fn _process(&mut self, owner: &Spatial, _delta: f64){
 		let input = Input::godot_singleton();
-		let chunk = VoxelChunk::new(Vector3::new(0.0,0.0,0.0),1,1,1,owner);
+		let mut chunk = VoxelChunk::new(Vector3::new(0.0,0.0,0.0),1,1,1);
 		
 		if input.is_action_just_pressed("test"){
-			self.size_x += 1;
-			self.size_y += 1;
-			self.size_z += 1;
+			chunk.size_x += 1;
+			chunk.size_y += 1;
+			chunk.size_z += 1;
 		}else if input.is_action_just_pressed("test2"){
-			self.size_x -= 1;
-			self.size_y -= 1;
-			self.size_z -= 1;
-		}
+			chunk.size_x -= 1;
+			chunk.size_y -= 1;
+			chunk.size_z -= 1;
+		};
 		
+		unsafe {
+			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(chunk.chunk())
+		};
 	}
 
 }
 
 
-pub struct VoxelChunk<'a>{
+pub struct VoxelChunk{
 	pos:Vector3,
-	size_x:i32,
-	size_y:i32,
-	size_z:i32,
-	owner:& <'a> Spatial
+	size_x:u32,
+	size_y:u32,
+	size_z:u32,
+//	owner:& <'a> Spatial
 }
 
 //#[methods]
-impl<'a> VoxelChunk<'a>{
-	fn new(position:Vector3, s_x:i32, s_y:i32, s_z:i32,ow:&<'a> Spatial) -> Self {
-		VoxelChunk<'a>{
+impl VoxelChunk{
+	fn new(position:Vector3, s_x:u32, s_y:u32, s_z:u32) -> Self {
+		VoxelChunk{
 			pos:position,
 			size_x:s_x,
 			size_y:s_y,
 			size_z:s_z,
-			owner:ow
+//			owner:ow
 		}
 	}
 
-	fn set_size(&mut self,s_x:i32,s_y:i32,s_z:i32){
-		self.size_x = s_x;
-		self.size_y = s_y;
-		self.size_z = s_z;
-	}
+//	fn set_size(&mut self,s_x:u32,s_y:u32,s_z:u32){
+//		self.size_x = s_x;
+//		self.size_y = s_y;
+//		self.size_z = s_z;
+//	}
 
 //	fn start(){
 //		
 //		
 //	}
 //
-	fn update(&self){
+	fn chunk(&mut self) -> gdnative::Ref<ArrayMesh>{
 		let st = SurfaceTool::new();
 
 //		st.begin(Mesh::PRIMITIVE_TRIANGLES);
@@ -97,9 +92,10 @@ impl<'a> VoxelChunk<'a>{
 		st.generate_normals(false);
 		let mesh: Ref<ArrayMesh> = st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT).unwrap();
 		godot_print!("commited mesh!");
-		unsafe {
-			self.owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(mesh)
-		};
+		return mesh;
+//		unsafe {
+//			self.owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(mesh)
+//		};
 	}
 
 //	fn end(){
