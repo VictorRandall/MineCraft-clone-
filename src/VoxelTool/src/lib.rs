@@ -47,17 +47,17 @@ impl VoxelWorld {
 }
 
 
-pub struct VoxelChunk{
+pub struct VoxelChunk<'a>{
 	pos:Vector3,
 	size_x:i32,
 	size_y:i32,
 	size_z:i32,
-	owner:&Spatial
+	owner:& <'a> Spatial
 }
 
 //#[methods]
 impl<'a> VoxelChunk<'a>{
-	fn new(position:Vector3, s_x:i32, s_y:i32, s_z:i32,ow:&Spatial) -> Self {
+	fn new(position:Vector3, s_x:i32, s_y:i32, s_z:i32,ow:&<'a> Spatial) -> Self {
 		VoxelChunk<'a>{
 			pos:position,
 			size_x:s_x,

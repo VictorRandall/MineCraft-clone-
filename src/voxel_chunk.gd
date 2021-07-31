@@ -2,7 +2,7 @@ extends CollisionShape
 
 class_name VoxelChunk
 
-var mat = preload("res://src/blocks.tres")
+#var mat = preload("res://src/blocks.tres")
 var mesh_instance
 var noise_seed
 var x
