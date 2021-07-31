@@ -28,15 +28,19 @@ impl VoxelWorld {
 			chunk.size_x += 1;
 			chunk.size_y += 1;
 			chunk.size_z += 1;
+			unsafe {
+			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(chunk.chunk())
+			};
 		}else if input.is_action_just_pressed("test2"){
 			chunk.size_x -= 1;
 			chunk.size_y -= 1;
 			chunk.size_z -= 1;
+			unsafe {
+			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(chunk.chunk())
+			};
 		};
 		
-		unsafe {
-			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(chunk.chunk())
-		};
+		
 	}
 
 }
