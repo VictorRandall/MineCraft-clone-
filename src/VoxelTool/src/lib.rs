@@ -1,46 +1,73 @@
+
 use gdnative::api::{ArrayMesh, Mesh, MeshInstance, OpenSimplexNoise, SurfaceTool, Spatial, StaticBody};
 use gdnative::prelude::*;
+
+//enum MeshType{
+//	none,
+//	smooth,
+//	cube,
+//	//custom:{}
+//}
+
+//struct BlockType{
+//	solid:bool,
+//	mshtype: MeshType,
+//
+//}
+
+
+
+
+//enum blocks{
+//	Air(false, MeshType::none),
+//	Grass(false, MeshType::cube)
+//}
+
+
 
 
 #[derive(NativeClass)]
 #[inherit(Spatial)]
 
-
-pub struct VoxelWorld;
+pub struct VoxelWorld{
+	chunks: Vec<VoxelChunk>
+}
 
 #[methods]
 impl VoxelWorld {
 	fn new(_owner: &Spatial) -> Self {
-		VoxelWorld
+		VoxelWorld{
+			chunks: Vec::new()
+		}
 	}
 
 
 	#[export]
-	fn _ready(&self, owner: &Spatial) {
+	fn _ready(&mut self, owner: &Spatial) {
 		godot_print!("_ready (rust)");
+		self.chunks[0] = VoxelChunk::new(Vector3::new(1.0,0.0,0.0),1,1,1)
 	}
 	#[export]
 	fn _process(&mut self, owner: &Spatial, _delta: f64){
 		let input = Input::godot_singleton();
-		let mut chunk = VoxelChunk::new(Vector3::new(0.0,0.0,0.0),1,1,1);
+//		let mut chunk = VoxelChunk::new(Vector3::new(1.0,0.0,0.0),1,1,1);
 		
 		if input.is_action_just_pressed("test"){
-			chunk.size_x += 1;
-			chunk.size_y += 1;
-			chunk.size_z += 1;
-			unsafe {
-			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(chunk.chunk())
-			};
+			self.chunks[0].size.0 += 1;
+			self.chunks[0].size.1 += 1;
+			self.chunks[0].size.2 += 1;
+			
 		}else if input.is_action_just_pressed("test2"){
-			chunk.size_x -= 1;
-			chunk.size_y -= 1;
-			chunk.size_z -= 1;
-			unsafe {
-			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(chunk.chunk())
-			};
+			self.chunks[0].size.0 -= 1;
+			self.chunks[0].size.1 -= 1;
+			self.chunks[0].size.2 -= 1;
 		};
 		
-		
+		for i in 0..self.chunks.len(){
+			unsafe {
+				owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(self.chunks[i].chunk())
+			};
+		}
 	}
 
 }
@@ -48,10 +75,8 @@ impl VoxelWorld {
 
 pub struct VoxelChunk{
 	pos:Vector3,
-	size_x:u32,
-	size_y:u32,
-	size_z:u32,
-//	owner:& <'a> Spatial
+	size:(u32,u32,u32),
+	data: Vec<u8>
 }
 
 //#[methods]
@@ -59,9 +84,8 @@ impl VoxelChunk{
 	fn new(position:Vector3, s_x:u32, s_y:u32, s_z:u32) -> Self {
 		VoxelChunk{
 			pos:position,
-			size_x:s_x,
-			size_y:s_y,
-			size_z:s_z,
+			size:(s_x,s_y,s_z),
+			data: Vec::new(),
 //			owner:ow
 		}
 	}
@@ -80,14 +104,18 @@ impl VoxelChunk{
 	fn chunk(&mut self) -> gdnative::Ref<ArrayMesh>{
 		let st = SurfaceTool::new();
 
-//		st.begin(Mesh::PRIMITIVE_TRIANGLES);
-		st.begin(Mesh::PRIMITIVE_LINES);
+		st.begin(Mesh::PRIMITIVE_TRIANGLES);
+//		st.begin(Mesh::PRIMITIVE_LINES);
 		
 
-		for x in 0..self.size_x{
-			for y in 0..self.size_y{
-				for z in 0..self.size_z{
-					VoxelChunk::custom_voxel(&st, Vector3::new(x as f32,y as f32,z as f32));
+		for x in 0..self.size.0{
+			for y in 0..self.size.1{
+				for z in 0..self.size.2{
+					VoxelChunk::custom_voxel(
+						&st, 
+						Vector3::new(x as f32 + self.pos.x,y as f32  + self.pos.y,z as f32 + self.pos.z),
+						&mut self.data
+						);
 				}
 			}
 		}
@@ -106,7 +134,7 @@ impl VoxelChunk{
 //
 //	}
 
-	fn custom_voxel(st:&Ref<SurfaceTool, Unique>, pos:Vector3){
+	fn custom_voxel(st:&Ref<SurfaceTool, Unique>, pos:Vector3, data: &mut Vec<u8>){
 		
 		let offset_x:f32 = pos.x;
 		let offset_y:f32 = pos.y;
@@ -115,7 +143,10 @@ impl VoxelChunk{
 		let offset_uv_x:f32 = 0.0;
 		let offset_uv_y:f32 = 0.0;
 
+		
 
+//		data[1];
+//		godot_print!("{}",data.count(1));
 
 		//top
 		st.add_uv(Vector2::new(0.0, 0.0));

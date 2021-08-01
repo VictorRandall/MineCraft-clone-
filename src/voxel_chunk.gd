@@ -42,7 +42,7 @@ func generate_chunk():
 	var arrm = ArrayMesh.new()
 	mi.mesh = st.commit()
 #	s.set_points()
-	shape = s
+#	shape = s
 	mi.create_trimesh_collision()
 	add_child(mi)
 

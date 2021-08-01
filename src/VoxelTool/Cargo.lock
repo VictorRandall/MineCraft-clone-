@@ -3,13 +3,6 @@
 version = 3
 
 [[package]]
-name = "VoxelTool"
-version = "0.1.0"
-dependencies = [
- "gdnative",
-]
-
-[[package]]
 name = "ahash"
 version = "0.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -480,6 +473,13 @@ name = "version_check"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5fecdca9a5291cc2b8dcf7dc02453fee791a280f3743cb0905f8822ae463b3fe"
+
+[[package]]
+name = "voxel_tool"
+version = "0.1.0"
+dependencies = [
+ "gdnative",
+]
 
 [[package]]
 name = "wasi"

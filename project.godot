@@ -24,6 +24,11 @@ config/name="MineCraft"
 run/main_scene="res://Spatial.tscn"
 config/icon="res://icon.png"
 
+[display]
+
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
+
 [input]
 
 test={
