@@ -23,12 +23,14 @@ mesh = SubResource( 1 )
 material/0 = null
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10.2163, 5, 17.5655 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 32.9124, 5, 39.0895 )
 
 [node name="Label" type="Label" parent="."]
 margin_right = 40.0
 margin_bottom = 14.0
-rect_scale = Vector2( 3.5, 3.5 )
+text = "self.chunks.len(2)
+self.chunks.len() as f32 + 0.0 == 2
+delta = 0.01666666753590107"
 __meta__ = {
 "_edit_use_anchors_": false
 }
