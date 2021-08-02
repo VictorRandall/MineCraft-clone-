@@ -30,14 +30,16 @@ use gdnative::prelude::*;
 #[inherit(Spatial)]
 
 pub struct VoxelWorld{
-	chunks: Vec<VoxelChunk>
+	chunks: Vec<VoxelChunk>,
+	mainData: Vec<Vec<u16>>,
 }
 
 #[methods]
 impl VoxelWorld {
 	fn new(_owner: &Spatial) -> Self {
 		VoxelWorld{
-			chunks: Vec::new()
+			chunks: Vec::new(),
+			mainData: Vec::new(),
 		}
 	}
 
@@ -45,7 +47,7 @@ impl VoxelWorld {
 	#[export]
 	fn _ready(&mut self, owner: &Spatial) {
 		godot_print!("_ready (rust)");
-		self.chunks.push(VoxelChunk::new(Vector3::new(1.0,0.0,0.0),1,1,1));
+		self.chunks.push(VoxelChunk::new(Vector3::new(2.0,0.0,0.0),1,1,1));
 		self.chunks.push(VoxelChunk::new(Vector3::new(0.0,0.0,0.0),1,1,1));
 	}
 	#[export]
@@ -55,25 +57,34 @@ impl VoxelWorld {
 //		let mut chunk = VoxelChunk::new(Vector3::new(1.0,0.0,0.0),1,1,1);
 		
 		if input.is_action_just_pressed("test"){
-			self.chunks[0].size.0 += 1;
-			self.chunks[0].size.1 += 1;
-			self.chunks[0].size.2 += 1;
+			for i in 0..self.chunks.len(){
+				self.chunks[i].size.0 += 1;
+				self.chunks[i].size.1 += 1;
+				self.chunks[i].size.2 += 1;
+			}
 //			self.chunks.push(VoxelChunk::new(Vector3::new(self.chunks.len() as f32 + 0.0 ,0.0,0.0),1,1,1));
 		}else if input.is_action_just_pressed("test2"){
-			self.chunks[0].size.0 -= 1;
-			self.chunks[0].size.1 -= 1;
-			self.chunks[0].size.2 -= 1;
+			for i in 0..self.chunks.len(){
+				self.chunks[i].size.0 -= 1;
+				self.chunks[i].size.1 -= 1;
+				self.chunks[i].size.2 -= 1;
+			}
 		};
 		
 		label.set_text(
 			format!("self.chunks.len({})\nself.chunks.len() as f32 + 0.0 == {}\ndelta = {}",self.chunks.len(), self.chunks.len() as f32 + 0.0, delta.to_string())
 		);
 		
-//		for i in 0..self.chunks.len(){
-		unsafe {
-			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(self.chunks[0].make_chunk())
-		};
-//		}
+		for i in 0..self.chunks.len(){
+			self.chunks[i].start(&owner);
+			
+		}
+//		unsafe {
+//			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(self.chunks[0].chunk_mesh())
+//		};
+//		unsafe {
+//			owner.get_node("MeshInstance2").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(self.chunks[1].chunk_mesh())
+//		};
 	}
 }
 
@@ -81,7 +92,7 @@ impl VoxelWorld {
 pub struct VoxelChunk{
 	pos:Vector3,
 	size:(u32,u32,u32),
-	data: Vec<u8>
+	data: Vec<u16>
 //	data_pos:usize
 }
 
@@ -102,33 +113,42 @@ impl VoxelChunk{
 //		self.size_z = s_z;
 //	}
 
-//	fn start(){
-//		
-//		
-//	}
-//
-	fn make_chunk(&mut self) -> gdnative::Ref<ArrayMesh>{
+	fn start(&mut self,owner: &Spatial){
 		self.data.clear();
+		let meshinst = MeshInstance::new();
+		for x in 0..self.size.0{
+			for y in 0..self.size.1{
+				for z in 0..self.size.2{
+					self.data.push(1);
+				}
+			}
+		}
+		meshinst.set_mesh(self.chunk_mesh());
+		owner.add_child(meshinst,false);
+		
+//		unsafe {
+//			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(mesh)
+//		};
+		
+	}
+//
+	fn chunk_mesh(&mut self) -> gdnative::Ref<ArrayMesh>{
+//		self.data.clear();
 		let st = SurfaceTool::new();
 
-		st.begin(Mesh::PRIMITIVE_TRIANGLES);
-//		st.begin(Mesh::PRIMITIVE_LINES);
+//		st.begin(Mesh::PRIMITIVE_TRIANGLES);
+		st.begin(Mesh::PRIMITIVE_LINES);
 		
 
-		for x in (self.pos.x * self.size.0 as f32) - self.size.0 as f32 .. self.pos.x * self.size.0 as f32{
-			for y in (self.pos.y * self.size.1 as f32) - self.size.1 as f32 .. self.size.1{
+		for x in 0..self.size.0{
+			for y in 0..self.size.1{
 				for z in 0..self.size.2{
 					VoxelChunk::custom_voxel(
 						&st, 
 						Vector3::new(x as f32 + (self.pos.x * self.size.0 as f32),y as f32  + (self.pos.y * self.size.1 as f32),z as f32 + (self.pos.z * self.size.2 as f32)),
 						&mut self.data
 					);
-//					godot_print!(
-//					"\nx as f32 + (self.pos.x * self.size.0 as f32) == {}\ny as f32  + (self.pos.y * self.size.1 as f32) == {}\nz as f32 + (self.pos.z * self.size.2 as f32) == {}"
-//					,x as f32 + (self.pos.x * self.size.0 as f32)
-//					,y as f32  + (self.pos.y * self.size.1 as f32)
-//					,z as f32 + (self.pos.z * self.size.2 as f32)
-//					);
+					godot_print!("{},{},{}",x,y,z)
 				}
 			}
 		}
@@ -147,7 +167,7 @@ impl VoxelChunk{
 //
 //	}
 
-	fn custom_voxel(st:&Ref<SurfaceTool, Unique>, pos:Vector3, data: &mut Vec<u8>){
+	fn custom_voxel(st:&Ref<SurfaceTool, Unique>, pos:Vector3, data: &mut Vec<u16>){
 		
 		let offset_x:f32 = pos.x;
 		let offset_y:f32 = pos.y;
@@ -158,7 +178,7 @@ impl VoxelChunk{
 
 		
 
-		data.push(1);
+		
 		godot_print!("{}",data.len());
 
 		//top
