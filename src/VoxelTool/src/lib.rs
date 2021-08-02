@@ -1,31 +1,21 @@
-
+use std;
 use gdnative::api::{ArrayMesh, Mesh, MeshInstance, OpenSimplexNoise, SurfaceTool, Spatial, StaticBody};
 use gdnative::prelude::*;
-
 //enum MeshType{
 //	none,
 //	smooth,
 //	cube,
 //	//custom:{}
 //}
-
 //struct BlockType{
 //	solid:bool,
 //	mshtype: MeshType,
 //
 //}
-
-
-
-
 //enum blocks{
 //	Air(false, MeshType::none),
 //	Grass(false, MeshType::cube)
 //}
-
-
-
-
 #[derive(NativeClass)]
 #[inherit(Spatial)]
 
@@ -38,8 +28,8 @@ pub struct VoxelWorld{
 impl VoxelWorld {
 	fn new(_owner: &Spatial) -> Self {
 		VoxelWorld{
-			chunks: Vec::new(),
-			mainData: Vec::new(),
+			chunks: Vec::<VoxelChunk>::new(),
+			mainData: Vec::<Vec<u16>>::new(),
 		}
 	}
 
@@ -53,7 +43,7 @@ impl VoxelWorld {
 	#[export]
 	fn _process(&mut self, owner: &Spatial, delta: f64){
 		let input = Input::godot_singleton();
-		let label = unsafe {owner.get_node("Label").unwrap().assume_safe().cast::<Label>().unwrap()};
+//		let label = unsafe {owner.get_node("Label").unwrap().assume_safe().cast::<Label>().unwrap()};
 //		let mut chunk = VoxelChunk::new(Vector3::new(1.0,0.0,0.0),1,1,1);
 		
 		if input.is_action_just_pressed("test"){
@@ -71,13 +61,14 @@ impl VoxelWorld {
 			}
 		};
 		
-		label.set_text(
-			format!("self.chunks.len({})\nself.chunks.len() as f32 + 0.0 == {}\ndelta = {}",self.chunks.len(), self.chunks.len() as f32 + 0.0, delta.to_string())
-		);
+//		label.set_text(
+//			format!("self.chunks.len({})\nself.chunks.len() as f32 + 0.0 == {}\ndelta = {}",self.chunks.len(), self.chunks.len() as f32 + 0.0, delta.to_string())
+//		);
 		
+
 		for i in 0..self.chunks.len(){
 			self.chunks[i].start(&owner);
-			
+//			self.mainData.push(self.chunks[i].data);
 		}
 //		unsafe {
 //			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(self.chunks[0].chunk_mesh())
@@ -92,7 +83,8 @@ impl VoxelWorld {
 pub struct VoxelChunk{
 	pos:Vector3,
 	size:(u32,u32,u32),
-	data: Vec<u16>
+	data: Vec<u16>,
+	update:bool,
 //	data_pos:usize
 }
 
@@ -102,7 +94,8 @@ impl VoxelChunk{
 		VoxelChunk{
 			pos:position,
 			size:(s_x,s_y,s_z),
-			data: Vec::new(),
+			data: Vec::<u16>::new(),
+			update:true,
 //			owner:ow
 		}
 	}
@@ -113,23 +106,26 @@ impl VoxelChunk{
 //		self.size_z = s_z;
 //	}
 
-	fn start(&mut self,owner: &Spatial){
-		self.data.clear();
-		let meshinst = MeshInstance::new();
-		for x in 0..self.size.0{
-			for y in 0..self.size.1{
-				for z in 0..self.size.2{
-					self.data.push(1);
+	fn start(&mut self, owner: &Spatial){
+		if self.update == true{
+//			std::thread::spawn(||{
+				self.data.clear();
+				let meshinst = MeshInstance::new();
+				for x in 0..self.size.0{
+					for y in 0..self.size.1{
+						for z in 0..self.size.2{
+							self.data.push(1);
+						}
+					}
 				}
-			}
+				meshinst.set_mesh(self.chunk_mesh());
+				owner.add_child(meshinst,false);
+				
+		//		unsafe {
+		//			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(mesh)
+		//		};
+//			});
 		}
-		meshinst.set_mesh(self.chunk_mesh());
-		owner.add_child(meshinst,false);
-		
-//		unsafe {
-//			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(mesh)
-//		};
-		
 	}
 //
 	fn chunk_mesh(&mut self) -> gdnative::Ref<ArrayMesh>{
@@ -156,11 +152,8 @@ impl VoxelChunk{
 
 		st.generate_normals(false);
 		let mesh: Ref<ArrayMesh> = st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT).unwrap();
-//		godot_print!("commited mesh in {} times!", 1);
+//		godot_print!("commited mesh {} times!", 1);
 		return mesh;
-//		unsafe {
-//			self.owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(mesh)
-//		};
 	}
 
 //	fn end(){
