@@ -35,13 +35,13 @@ impl VoxelWorld {
 
 
 	#[export]
-	fn _ready(&mut self, owner: &Spatial) {
+	fn _ready(&mut self, _owner: &Spatial) {
 		godot_print!("_ready (rust)");
 		self.chunks.push(VoxelChunk::new(Vector3::new(2.0,0.0,0.0),1,1,1));
 		self.chunks.push(VoxelChunk::new(Vector3::new(0.0,0.0,0.0),1,1,1));
 	}
 	#[export]
-	fn _process(&mut self, owner: &Spatial, delta: f64){
+	fn _process(&mut self, owner: &Spatial, _delta: f64){
 		let input = Input::godot_singleton();
 //		let label = unsafe {owner.get_node("Label").unwrap().assume_safe().cast::<Label>().unwrap()};
 //		let mut chunk = VoxelChunk::new(Vector3::new(1.0,0.0,0.0),1,1,1);
@@ -83,7 +83,7 @@ impl VoxelWorld {
 pub struct VoxelChunk{
 	pos:Vector3,
 	size:(u32,u32,u32),
-	data: Vec<u16>,
+	data: Vec<Vec<Vec<u16>>>,
 	update:bool,
 //	data_pos:usize
 }
@@ -94,7 +94,7 @@ impl VoxelChunk{
 		VoxelChunk{
 			pos:position,
 			size:(s_x,s_y,s_z),
-			data: Vec::<u16>::new(),
+			data: vec![vec![vec![1u16; s_x as usize]; s_y as usize]; s_z as usize],
 			update:true,
 //			owner:ow
 		}
@@ -109,17 +109,19 @@ impl VoxelChunk{
 	fn start(&mut self, owner: &Spatial){
 		if self.update == true{
 //			std::thread::spawn(||{
-				self.data.clear();
+				
 				let meshinst = MeshInstance::new();
 				for x in 0..self.size.0{
 					for y in 0..self.size.1{
 						for z in 0..self.size.2{
-							self.data.push(1);
+							self.data[x][y][z];
 						}
 					}
 				}
 				meshinst.set_mesh(self.chunk_mesh());
-				owner.add_child(meshinst,false);
+				meshinst.set_name(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z));
+				owner.add_child(meshinst,true);
+				self.update = false;
 				
 		//		unsafe {
 		//			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(mesh)
@@ -156,11 +158,14 @@ impl VoxelChunk{
 		return mesh;
 	}
 
-//	fn end(){
-//
-//	}
+	fn end(&mut self, owner: &Spatial){
+		self.data.clear();
+		unsafe {
+			owner.get_node(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z)).unwrap().assume_safe().cast::<MeshInstance>().unwrap().queue_free();
+		};
+	}
 
-	fn custom_voxel(st:&Ref<SurfaceTool, Unique>, pos:Vector3, data: &mut Vec<u16>){
+	fn custom_voxel(st:&Ref<SurfaceTool, Unique>, pos:Vector3, data: &mut Vec<Vec<Vec<u16>>>){
 		
 		let offset_x:f32 = pos.x;
 		let offset_y:f32 = pos.y;
