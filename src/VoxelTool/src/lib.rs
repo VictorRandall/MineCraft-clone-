@@ -1,4 +1,7 @@
+extern crate ndarray;
+
 use std;
+use ndarray::Array3;
 use gdnative::api::{ArrayMesh, Mesh, MeshInstance, OpenSimplexNoise, SurfaceTool, Spatial, StaticBody};
 use gdnative::prelude::*;
 //enum MeshType{
