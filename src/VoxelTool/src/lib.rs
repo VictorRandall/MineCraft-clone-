@@ -5,21 +5,8 @@ use std;
 use rand::Rng;
 use gdnative::api::{ArrayMesh, Mesh, MeshInstance, OpenSimplexNoise, SurfaceTool, Spatial, StaticBody};
 use gdnative::prelude::*;
-//enum MeshType{
-//	none,
-//	smooth,
-//	cube,
-//	//custom:{}
-//}
-//struct BlockType{
-//	solid:bool,
-//	mshtype: MeshType,
-//
-//}
-//enum blocks{
-//	Air(false, MeshType::none)
-//	Grass(false, MeshType::cube)
-//}
+
+
 #[derive(NativeClass)]
 #[inherit(Spatial)]
 pub struct VoxelWorld{
@@ -41,12 +28,12 @@ impl VoxelWorld {
 
 	#[export]
 	fn _ready(&mut self, _owner: &Spatial) {
-		godot_print!("_ready (rust)");
+		godot_print!("{}",self.seed);
 //		let a = Array3::new();
 		for x in 0..2{
 			for y in 0..2{
 				for z in 0..2{
-					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32 * 2f32,y as f32 * 2f32,z as f32 * 2f32),8,8,8));
+					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32 * 2f32,y as f32 * 2f32,z as f32 * 2f32),Vector3::new(8.0f32,8.0f32,8.0f32)));
 				}
 			}
 		}
@@ -55,58 +42,47 @@ impl VoxelWorld {
 	fn _process(&mut self, owner: &Spatial, _delta: f64){
 		let input = Input::godot_singleton();
 //		let label = unsafe {owner.get_node("Label").unwrap().assume_safe().cast::<Label>().unwrap()};
-//		let mut chunk = VoxelChunk::new(Vector3::new(1.0,0.0,0.0),1,1,1);
 		
 		if input.is_action_pressed("test"){
 			for i in 0..self.chunks.len(){
-				self.chunks[i].size += 1;
+				self.chunks[i].size.x += 1.0f32;
+				self.chunks[i].size.y += 1.0f32;
+				self.chunks[i].size.z += 1.0f32;
 				self.chunks[i].update = true;
 			}
 //			self.chunks.push(VoxelChunk::new(Vector3::new(self.chunks.len() as f32 + 0.0 ,0.0,0.0),1,1,1));
 		}else if input.is_action_pressed("test2"){
 			for i in 0..self.chunks.len(){
-				self.chunks[i].size.0 -= 1;
+				self.chunks[i].size.x -= 1.0f32;
+				self.chunks[i].size.y -= 1.0f32;
+				self.chunks[i].size.z -= 1.0f32;
 				self.chunks[i].update = true;
 			}
 		};
-		
-//		label.set_text(
-//			format!("self.chunks.len({})\nself.chunks.len() as f32 + 0.0 == {}\ndelta = {}",self.chunks.len(), self.chunks.len() as f32 + 0.0, delta.to_string())
-//		);
 		
 
 		for i in 0..self.chunks.len(){
 			self.chunks[i].start(&owner);
 //			self.chunks[i].restart(&owner);
-//			self.mainData.push(self.chunks[i].data);
 		}
-//		unsafe {
-//			owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(self.chunks[0].chunk_mesh())
-//		};
-//		unsafe {
-//			owner.get_node("MeshInstance2").unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(self.chunks[1].chunk_mesh())
-//		};
 	}
 
-	fn get_voxel(x:u32,y:u32,z:u32){
-		for i in 0..16{for j in 0..16}
-	}
 }
 
 #[derive(Debug)]
 pub struct VoxelChunk{
 	pos:Vector3,
-	size:u32,
+	size:Vector3,
 	data: Vec<Vec<Vec<u16>>>,
 	update:bool,
 }
 
 impl VoxelChunk{
-	fn new(position:Vector3, s_x:u32, s_y:u32, s_z:u32) -> Self {
+	fn new(position:Vector3,s:Vector3) -> Self {
 		VoxelChunk{
 			pos:position,
-			size:(s_x,s_y,s_z),
-			data: vec![vec![vec![1u16; s_x as usize]; s_y as usize]; s_z as usize],//the default value is 4
+			size:s,
+			data: vec![vec![vec![0u16;s.x as usize];s.y as usize];s.z as usize],//the default value is 4
 			update:true,
 		}
 	}
@@ -117,17 +93,14 @@ impl VoxelChunk{
 //		self.size_z = s_z;
 //	}
 
-
-
-
 	fn start(&mut self, owner: &Spatial){
 		if self.update == true{
 //			std::thread::spawn(||{
 				let noise = OpenSimplexNoise::new();
 				let meshinst = MeshInstance::new();
-				for x in 0..self.size{
-					for y in 0..self.size{
-						for z in 0..self.size{
+				for x in 0..self.size.x as i32{
+					for y in 0..self.size.y as i32{
+						for z in 0..self.size.z as i32{
 //							if y as f64 > 10.0f64{ //noise.get_noise_2d(x as f64, z as f64)*5f64+10f64{
 								self.data[x as usize][y as usize][z as usize] = 1u16;
 //							}//else{
@@ -151,12 +124,12 @@ impl VoxelChunk{
 //		st.begin(Mesh::PRIMITIVE_LINES);
 		
 
-		for x in 0..self.size{
-			for y in 0..self.size{
-				for z in 0..self.size{
+		for x in 0..self.size.x as i32{
+			for y in 0..self.size.y as i32{
+				for z in 0..self.size.z as i32{
 					VoxelChunk::custom_voxel(
 						&st, 
-						Vector3::new(x as f32 + (self.pos.x * self.size as f32),y as f32  + (self.pos.y * self.size as f32),z as f32 + (self.pos.z * self.size as f32)),
+						Vector3::new(x as f32 + (self.pos.x * self.size.x as f32),y as f32  + (self.pos.y * self.size.y as f32),z as f32 + (self.pos.z * self.size.z as f32)),
 						&self.data
 					);
 //					godot_print!("{},{},{}",x,y,z)
@@ -192,11 +165,11 @@ impl VoxelChunk{
 //		}
 //
 //		
-		godot_print!("{:#?}",data);
+//		godot_print!("{:#?}",data);
 
 		//top
-//		godot_print!("pos = Vector3({},{},{})",offset_x as usize,offset_y as usize,offset_z as usize)
-//		if data[offset_x as usize][(offset_y + 1.0f32) as usize][offset_z as usize] != 0u16{
+		godot_print!("pos = Vector3({},{},{})",(offset_x - 1.0f32) as usize,(offset_y - 1f32) as usize,(offset_z - 1f32) as usize);
+		if data[(offset_x - 1.0f32) as usize][(offset_y - 1.0f32 + 1.0f32) as usize][(offset_z - 1.0f32) as usize] != 0u16{
 			st.add_uv(Vector2::new(0.0, 0.0));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -210,7 +183,7 @@ impl VoxelChunk{
 			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
-//		}
+		}
 			
 		//botton
 //		if data[pos.x as usize][(pos.y - 1.0f32) as usize][pos.z as usize] != 0u16{

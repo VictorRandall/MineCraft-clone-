@@ -7,11 +7,8 @@ edition = "2018"
 
 [dependencies]
 gdnative = "0.9.3"
-<<<<<<< HEAD
-ndarray = "0.15.1"
-=======
+#ndarray = "0.15.1"
 rand = "0.3"
->>>>>>> 629216dbc2a993b1f5e2d47ea65217d330d7c9d7
 
 [lib]
 crate-type = ["cdylib"]
