@@ -32,9 +32,9 @@ func _physics_process(delta):
 	elif Input.is_action_pressed("ui_down"):
 		add_central_force(global_transform.basis.xform(Vector3.BACK*10))
 		if Input.is_action_pressed("ui_left"):
-			add_torque(Vector3(0,5,0))
-		if Input.is_action_pressed("ui_right"):
 			add_torque(Vector3(0,-5,0))
+		if Input.is_action_pressed("ui_right"):
+			add_torque(Vector3(0,5,0))
 			
 	if $Floaty.global_transform.origin.y <= 0:
 		add_force(Vector3.UP*5*-$Floaty.global_transform.origin, $Floaty.global_transform.origin-global_transform.origin)

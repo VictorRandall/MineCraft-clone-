@@ -48,7 +48,7 @@ impl VoxelWorld {
 				self.chunks[i].size.x += 1.0f32;
 				self.chunks[i].size.y += 1.0f32;
 				self.chunks[i].size.z += 1.0f32;
-				self.chunks[i].update = true;
+//				self.chunks[i].update = true;
 			}
 //			self.chunks.push(VoxelChunk::new(Vector3::new(self.chunks.len() as f32 + 0.0 ,0.0,0.0),1,1,1));
 		}else if input.is_action_pressed("test2"){
@@ -94,6 +94,7 @@ impl VoxelChunk{
 //	}
 
 	fn start(&mut self, owner: &Spatial){
+		godot_print!("{}",self.update);
 		if self.update == true{
 //			std::thread::spawn(||{
 				let noise = OpenSimplexNoise::new();
@@ -101,9 +102,9 @@ impl VoxelChunk{
 				for x in 0..self.size.x as i32{
 					for y in 0..self.size.y as i32{
 						for z in 0..self.size.z as i32{
-//							if y as f64 > 10.0f64{ //noise.get_noise_2d(x as f64, z as f64)*5f64+10f64{
+							if 4.0f64 > y as f64{ //noise.get_noise_2d(x as f64, z as f64)*5f64+10f64{
 								self.data[x as usize][y as usize][z as usize] = 1u16;
-//							}//else{
+							}//else{
 //								self.data[x as usize ][y as usize][z as usize] = 0u16;
 //							}
 						}
@@ -160,15 +161,15 @@ impl VoxelChunk{
 		let offset_uv_x:f32 = 0.0;
 		let offset_uv_y:f32 = 0.0;
 
-//		if data[offset_x as usize][offset_y as usize][offset_z as usize] == 0{
-//			return
-//		}
+		if data[offset_x as usize][offset_y as usize][offset_z as usize] == 0{
+			return
+		}
 //
 //		
 //		godot_print!("{:#?}",data);
 
 		//top
-		godot_print!("pos = Vector3({},{},{})",(offset_x - 1.0f32) as usize,(offset_y - 1f32) as usize,(offset_z - 1f32) as usize);
+		godot_print!("pos = Vector3({},{},{})",offset_x as usize,(offset_y + 1.0f32) as usize,offset_z as usize);
 		if data[(offset_x - 1.0f32) as usize][(offset_y - 1.0f32 + 1.0f32) as usize][(offset_z - 1.0f32) as usize] != 0u16{
 			st.add_uv(Vector2::new(0.0, 0.0));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));

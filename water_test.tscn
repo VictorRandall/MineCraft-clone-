@@ -9,23 +9,23 @@ background_mode = 2
 background_sky = SubResource( 1 )
 glow_enabled = true
 
-[sub_resource type="PlaneMesh" id=5]
+[sub_resource type="PlaneMesh" id=3]
 size = Vector2( 1000, 1000 )
 
-[sub_resource type="SpatialMaterial" id=6]
+[sub_resource type="SpatialMaterial" id=4]
 flags_transparent = true
 vertex_color_use_as_albedo = true
 albedo_color = Color( 0.00392157, 0.929412, 1, 0.498039 )
 
-[sub_resource type="BoxShape" id=3]
+[sub_resource type="BoxShape" id=5]
 extents = Vector3( 2, 0.5, 4 )
 
-[sub_resource type="CubeMesh" id=4]
+[sub_resource type="CubeMesh" id=6]
 size = Vector3( 4, 1, 8 )
 
-[sub_resource type="SphereMesh" id=8]
-
 [sub_resource type="SphereMesh" id=7]
+
+[sub_resource type="SphereMesh" id=8]
 
 [node name="Spatial" type="Spatial"]
 
@@ -33,8 +33,8 @@ size = Vector3( 4, 1, 8 )
 environment = SubResource( 2 )
 
 [node name="Water" type="MeshInstance" parent="."]
-mesh = SubResource( 5 )
-material/0 = SubResource( 6 )
+mesh = SubResource( 3 )
+material/0 = SubResource( 4 )
 
 [node name="RigidBody" type="RigidBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
@@ -43,10 +43,10 @@ angular_damp = 2.0
 script = ExtResource( 1 )
 
 [node name="CollisionShape" type="CollisionShape" parent="RigidBody"]
-shape = SubResource( 3 )
+shape = SubResource( 5 )
 
 [node name="MeshInstance" type="MeshInstance" parent="RigidBody"]
-mesh = SubResource( 4 )
+mesh = SubResource( 6 )
 material/0 = null
 
 [node name="H" type="Spatial" parent="RigidBody"]
@@ -60,46 +60,46 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.623, 8.581 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.30275, 0, -4.41811 )
 
 [node name="MeshInstance" type="MeshInstance" parent="RigidBody/Floaty"]
-mesh = SubResource( 8 )
+mesh = SubResource( 7 )
 material/0 = null
 
 [node name="Floaty2" type="Position3D" parent="RigidBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.69725, 0, -4.41811 )
 
 [node name="MeshInstance2" type="MeshInstance" parent="RigidBody/Floaty2"]
-mesh = SubResource( 8 )
+mesh = SubResource( 7 )
 material/0 = null
 
 [node name="Floaty3" type="Position3D" parent="RigidBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.69725, 0, 4.58189 )
 
 [node name="MeshInstance3" type="MeshInstance" parent="RigidBody/Floaty3"]
-mesh = SubResource( 8 )
+mesh = SubResource( 7 )
 material/0 = null
 
 [node name="Floaty4" type="Position3D" parent="RigidBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.30275, 0, 4.58189 )
 
 [node name="MeshInstance4" type="MeshInstance" parent="RigidBody/Floaty4"]
-mesh = SubResource( 8 )
+mesh = SubResource( 7 )
 material/0 = null
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -14 )
-mesh = SubResource( 7 )
+mesh = SubResource( 8 )
 material/0 = null
 
 [node name="MeshInstance3" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 26 )
-mesh = SubResource( 7 )
+mesh = SubResource( 8 )
 material/0 = null
 
 [node name="MeshInstance4" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 26 )
-mesh = SubResource( 7 )
+mesh = SubResource( 8 )
 material/0 = null
 
 [node name="MeshInstance2" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 5 )
-mesh = SubResource( 7 )
+mesh = SubResource( 8 )
 material/0 = null
