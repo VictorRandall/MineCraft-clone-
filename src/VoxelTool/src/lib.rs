@@ -6,6 +6,11 @@ use rand::Rng;
 use gdnative::api::{ArrayMesh, Mesh, MeshInstance, OpenSimplexNoise, SurfaceTool, Spatial, StaticBody};
 use gdnative::prelude::*;
 
+struct Voxel{
+	solid:bool
+	id:u16
+}//how do i add infinite members?
+
 
 #[derive(NativeClass)]
 #[inherit(Spatial)]
