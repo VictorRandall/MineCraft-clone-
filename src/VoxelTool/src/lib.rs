@@ -1,29 +1,25 @@
-//extern crate ndarray;
 
 use std;
-//use ndarray::Array3;
 use rand::Rng;
 use gdnative::api::{ArrayMesh, Mesh, MeshInstance, OpenSimplexNoise, SurfaceTool, Spatial, StaticBody};
 use gdnative::prelude::*;
 
-struct Voxel{
-	solid:bool
-	id:u16
-}//how do i add infinite members?
+mod voxel_chunk;
 
+use voxel_chunk::VoxelChunk;
 
 #[derive(NativeClass)]
 #[inherit(Spatial)]
-pub struct VoxelWorld{
+pub struct VoxelTerrain{
 	chunks: Vec<VoxelChunk>,
 	seed:u64,
 	chunk_size: u32,
 }
 
 #[methods]
-impl VoxelWorld {
+impl VoxelTerrain {
 	fn new(_owner: &Spatial) -> Self {
-		VoxelWorld{
+		VoxelTerrain{
 			chunks: Vec::<VoxelChunk>::new(),
 			seed: rand::thread_rng().gen(),
 			chunk_size: 16,
@@ -38,7 +34,7 @@ impl VoxelWorld {
 		for x in 0..2{
 			for y in 0..2{
 				for z in 0..2{
-					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32 * 2f32,y as f32 * 2f32,z as f32 * 2f32),Vector3::new(8.0f32,8.0f32,8.0f32)));
+					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32 * 2f32,y as f32 * 2f32,z as f32 * 2f32),8usize));
 				}
 			}
 		}
@@ -48,22 +44,22 @@ impl VoxelWorld {
 		let input = Input::godot_singleton();
 //		let label = unsafe {owner.get_node("Label").unwrap().assume_safe().cast::<Label>().unwrap()};
 		
-		if input.is_action_pressed("test"){
-			for i in 0..self.chunks.len(){
-				self.chunks[i].size.x += 1.0f32;
-				self.chunks[i].size.y += 1.0f32;
-				self.chunks[i].size.z += 1.0f32;
+//		if input.is_action_pressed("test"){
+//			for i in 0..self.chunks.len(){
+//				self.chunks[i].size += 1usize;
+//				self.chunks[i].size += 1usize;
+//				self.chunks[i].size += 1usize;
 //				self.chunks[i].update = true;
-			}
+//			}
 //			self.chunks.push(VoxelChunk::new(Vector3::new(self.chunks.len() as f32 + 0.0 ,0.0,0.0),1,1,1));
-		}else if input.is_action_pressed("test2"){
-			for i in 0..self.chunks.len(){
-				self.chunks[i].size.x -= 1.0f32;
-				self.chunks[i].size.y -= 1.0f32;
-				self.chunks[i].size.z -= 1.0f32;
-				self.chunks[i].update = true;
-			}
-		};
+//		}else if input.is_action_pressed("test2"){
+//			for i in 0..self.chunks.len(){
+//				self.chunks[i].size -= 1usize;
+//				self.chunks[i].size -= 1usize;
+//				self.chunks[i].size -= 1usize;
+//				self.chunks[i].update = true;
+//			}
+//		};
 		
 
 		for i in 0..self.chunks.len(){
@@ -74,208 +70,9 @@ impl VoxelWorld {
 
 }
 
-#[derive(Debug)]
-pub struct VoxelChunk{
-	pos:Vector3,
-	size:Vector3,
-	data: Vec<Vec<Vec<u16>>>,
-	update:bool,
-}
-
-impl VoxelChunk{
-	fn new(position:Vector3,s:Vector3) -> Self {
-		VoxelChunk{
-			pos:position,
-			size:s,
-			data: vec![vec![vec![0u16;s.x as usize];s.y as usize];s.z as usize],//the default value is 4
-			update:true,
-		}
-	}
-
-//	fn set_size(&mut self,s_x:u32,s_y:u32,s_z:u32){
-//		self.size_x = s_x;
-//		self.size_y = s_y;
-//		self.size_z = s_z;
-//	}
-
-	fn start(&mut self, owner: &Spatial){
-		godot_print!("{}",self.update);
-		if self.update == true{
-//			std::thread::spawn(||{
-				let noise = OpenSimplexNoise::new();
-				let meshinst = MeshInstance::new();
-				for x in 0..self.size.x as i32{
-					for y in 0..self.size.y as i32{
-						for z in 0..self.size.z as i32{
-							if 4.0f64 > y as f64{ //noise.get_noise_2d(x as f64, z as f64)*5f64+10f64{
-								self.data[x as usize][y as usize][z as usize] = 1u16;
-							}//else{
-//								self.data[x as usize ][y as usize][z as usize] = 0u16;
-//							}
-						}
-					}
-				}
-				meshinst.set_mesh(self.chunk_mesh());
-				meshinst.set_name(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z));
-				owner.add_child(meshinst,true);
-				self.update = false;
-//			});
-		}
-	}
-
-	fn chunk_mesh(&mut self) -> gdnative::Ref<ArrayMesh>{
-		let st = SurfaceTool::new();
-
-		st.begin(Mesh::PRIMITIVE_TRIANGLES);
-//		st.begin(Mesh::PRIMITIVE_LINES);
-		
-
-		for x in 0..self.size.x as i32{
-			for y in 0..self.size.y as i32{
-				for z in 0..self.size.z as i32{
-					VoxelChunk::custom_voxel(
-						&st, 
-						Vector3::new(x as f32 + (self.pos.x * self.size.x as f32),y as f32  + (self.pos.y * self.size.y as f32),z as f32 + (self.pos.z * self.size.z as f32)),
-						&self.data
-					);
-//					godot_print!("{},{},{}",x,y,z)
-				}
-			}
-		}
-		
-
-		st.generate_normals(false);
-		let mesh: Ref<ArrayMesh> = st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT).unwrap();
-		return mesh;
-	}
-
-//	fn restart(&mut self, owner: &Spatial){
-//		self.data.clear();
-//		godot_print!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z);
-//		unsafe {
-//			owner.get_node(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z)).unwrap().assume_safe().cast::<MeshInstance>().unwrap().queue_free();
-//		};
-//	}
-
-	fn custom_voxel(st:&Ref<SurfaceTool, Unique>, pos:Vector3, data: &Vec<Vec<Vec<u16>>>){
-		
-		let offset_x:f32 = pos.x;
-		let offset_y:f32 = pos.y;
-		let offset_z:f32 = pos.z;
-
-		let offset_uv_x:f32 = 0.0;
-		let offset_uv_y:f32 = 0.0;
-
-		if data[offset_x as usize][offset_y as usize][offset_z as usize] == 0{
-			return
-		}
-//
-//		
-//		godot_print!("{:#?}",data);
-
-		//top
-		godot_print!("pos = Vector3({},{},{})",offset_x as usize,(offset_y + 1.0f32) as usize,offset_z as usize);
-		if data[(offset_x - 1.0f32) as usize][(offset_y - 1.0f32 + 1.0f32) as usize][(offset_z - 1.0f32) as usize] != 0u16{
-			st.add_uv(Vector2::new(0.0, 0.0));
-			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
-
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.25));
-			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
-		}
-			
-		//botton
-//		if data[pos.x as usize][(pos.y - 1.0f32) as usize][pos.z as usize] != 0u16{
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
-			st.add_uv(Vector2::new(0.0, 0.0));
-			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,0.0+offset_z));
-
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.25));
-			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
-//		}
-
-	//	left
-//		if data[(pos.x - 1.0f32) as usize][pos.y as usize][pos.z as usize] != 0u16{
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.0, 0.0));
-			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
-
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.25));
-			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
-//		}
-
-	//	right
-//		if data[(pos.x + 1.0f32) as usize][pos.y as usize][pos.z as usize] != 0u16{
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.0, 0.0));
-			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,0.0+offset_z));
-
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.25));
-			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
-//		}
-		
-	//	front
-		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
-		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
-		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
-
-		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
-		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
-		st.add_uv(Vector2::new(0.25, 0.25));
-		st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
-
-	//	back
-		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
-		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
-		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,0.0+offset_z));
-
-		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
-		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
-		st.add_uv(Vector2::new(0.25, 0.25));
-		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
-	}
-}
 
 fn init(handle: InitHandle) {
-	handle.add_tool_class::<VoxelWorld>();
+	handle.add_tool_class::<VoxelTerrain>();
 }
 
 godot_init!(init);
