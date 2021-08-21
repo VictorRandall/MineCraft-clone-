@@ -30,7 +30,7 @@ impl VoxelChunk{
 
 //	FIXME: get_voxel cant return voxel data
 	pub fn get_voxel(&self,s_x:usize,s_y:usize,s_z:usize) -> u16{
-		let voxel = self.data[s_x][s_y][s_z];
+		let voxel = self.data.get(s_x).get(s_y).get(s_z);
 		
 		match voxel{
 			Some(x) => return x,
@@ -47,7 +47,7 @@ impl VoxelChunk{
 				for x in 0..self.size as i32{
 					for y in 0..self.size as i32{
 						for z in 0..self.size as i32{
-							if 4.0f64 > y as f64{ //noise.get_noise_2d(x as f64, z as f64)*5f64+10f64{
+							if noise.get_noise_2d(x as f64, z as f64)*5f64+10f64 > y as f64{ //noise.get_noise_2d(x as f64, z as f64)*5f64+10f64{
 								self.data[x as usize][y as usize][z as usize] = 1u16;
 							}//else{
 //								self.data[x as usize ][y as usize][z as usize] = 0u16;
