@@ -9,3 +9,5 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 32.9124, 5, 39.0895 )
 
 [node name="Spatial" type="Spatial" parent="."]
 script = ExtResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial"]

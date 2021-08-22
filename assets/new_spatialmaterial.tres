@@ -2,8 +2,6 @@
 
 [ext_resource path="res://assets/new_atlastexture.tres" type="Texture" id=1]
 
-
 [resource]
-flags_transparent = true
-flags_vertex_lighting = true
+flags_no_depth_test = true
 albedo_texture = ExtResource( 1 )
