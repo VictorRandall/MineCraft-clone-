@@ -34,7 +34,7 @@ impl VoxelTerrain {
 		for x in 0..2{
 			for y in 0..2{
 				for z in 0..2{
-					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32 * 2f32,y as f32 * 2f32,z as f32 * 2f32),8usize));
+					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32 * 2f32,y as f32 * 2f32,z as f32 * 2f32),10usize));
 				}
 			}
 		}

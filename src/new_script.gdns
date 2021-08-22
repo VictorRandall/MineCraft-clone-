@@ -6,5 +6,5 @@ dependency/X11.64 = [  ]
 
 [resource]
 resource_name = "VoxelWorld"
-class_name = "VoxelWorld"
+class_name = "VoxelTerrain"
 library = SubResource( 1 )

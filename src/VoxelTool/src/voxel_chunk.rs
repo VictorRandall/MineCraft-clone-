@@ -28,13 +28,14 @@ impl VoxelChunk{
 		}
 	}
 
-//	FIXME: get_voxel cant return voxel data
-	pub fn get_voxel(&self,s_x:usize,s_y:usize,s_z:usize) -> u16{
-		let voxel = self.data.get(s_x).get(s_y).get(s_z);
+	pub fn get_voxel(&self,s_x:usize,s_y:usize,s_z:usize) -> &u16{
+		let voxel = self.data.get(s_x).unwrap().get(s_y).unwrap().get(s_z);
+//		let voe = &voxl.unwrap().get(s_y);
+//		let voxel = &voe.unwrap().get(s_z);
 		
 		match voxel{
-			Some(x) => return x,
-			None	=> return 0u16,
+			Some(x) => return &x,
+			None	=> return &1u16,
 		}
 	}
 
@@ -47,7 +48,7 @@ impl VoxelChunk{
 				for x in 0..self.size as i32{
 					for y in 0..self.size as i32{
 						for z in 0..self.size as i32{
-							if noise.get_noise_2d(x as f64, z as f64)*5f64+10f64 > y as f64{ //noise.get_noise_2d(x as f64, z as f64)*5f64+10f64{
+							if 4.0f64 > y as f64{ //noise.get_noise_2d(x as f64, z as f64)*5f64+10f64{
 								self.data[x as usize][y as usize][z as usize] = 1u16;
 							}//else{
 //								self.data[x as usize ][y as usize][z as usize] = 0u16;
@@ -55,7 +56,7 @@ impl VoxelChunk{
 						}
 					}
 				}
-				meshinst.set_mesh(self.chunk_mesh());
+				meshinst.set_mesh(self.chunk_mesh().expect("onosecond"));
 				meshinst.set_name(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z));
 				owner.add_child(meshinst,true);
 				self.update = false;
@@ -63,7 +64,7 @@ impl VoxelChunk{
 		}
 	}
 
-	fn chunk_mesh(&mut self) -> gdnative::Ref<ArrayMesh>{
+	fn chunk_mesh(&self) -> Option<gdnative::Ref<ArrayMesh>>{
 		let st = SurfaceTool::new();
 
 		st.begin(Mesh::PRIMITIVE_TRIANGLES);
@@ -73,7 +74,7 @@ impl VoxelChunk{
 		for x in 0..self.size as i32{
 			for y in 0..self.size as i32{
 				for z in 0..self.size as i32{
-					VoxelChunk::custom_voxel(
+					&self.custom_voxel(
 						&st, 
 						Vector3::new(x as f32 + (self.pos.x * self.size as f32),y as f32  + (self.pos.y * self.size as f32),z as f32 + (self.pos.z * self.size as f32)),
 						&self.data
@@ -86,7 +87,7 @@ impl VoxelChunk{
 
 		st.generate_normals(false);
 		let mesh: Ref<ArrayMesh> = st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT).unwrap();
-		return mesh;
+		return Some(mesh);
 	}
 
 //	fn restart(&mut self, owner: &Spatial){
@@ -97,7 +98,7 @@ impl VoxelChunk{
 //		};
 //	}
 
-	fn custom_voxel(st:&Ref<SurfaceTool, Unique>, pos:Vector3, data: &Vec<Vec<Vec<u16>>>){
+	fn custom_voxel(&self,st:&Ref<SurfaceTool, Unique>, pos:Vector3, data: &Vec<Vec<Vec<u16>>>){
 		
 		let offset_x:f32 = pos.x;
 		let offset_y:f32 = pos.y;
@@ -106,16 +107,17 @@ impl VoxelChunk{
 		let offset_uv_x:f32 = 0.0;
 		let offset_uv_y:f32 = 0.0;
 
-		if get_voxel(pos.x as usize,pos.y as usize, pos.y as usize) == 0{
-			return
+		if self.get_voxel(offset_x as usize,offset_y as usize, offset_z as usize) == &0u16{
+			godot_print!("A N");
+			return;
 		}
 //
 //		
 //		godot_print!("{:#?}",data);
 
 		//top
-		godot_print!("pos = Vector3({},{},{})",offset_x as usize,(offset_y + 1.0f32) as usize,offset_z as usize);
-		if data[(offset_x - 1.0f32) as usize][(offset_y - 1.0f32 + 1.0f32) as usize][(offset_z - 1.0f32) as usize] != 0u16{
+//		godot_print!("pos = Vector3({},{},{})",offset_x as usize,(offset_y + 1.0f32) as usize,offset_z as usize);
+		if self.get_voxel(offset_x as usize,(offset_y + 1.0f32) as usize, offset_z as usize) == &0u16{
 			st.add_uv(Vector2::new(0.0, 0.0));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -132,7 +134,7 @@ impl VoxelChunk{
 		}
 			
 		//botton
-//		if data[pos.x as usize][(pos.y - 1.0f32) as usize][pos.z as usize] != 0u16{
+		if self.get_voxel(offset_x as usize,(offset_y + 1.0f32) as usize, offset_z as usize) == &0u16{
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -146,7 +148,7 @@ impl VoxelChunk{
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
-//		}
+		}
 
 	//	left
 //		if data[(pos.x - 1.0f32) as usize][pos.y as usize][pos.z as usize] != 0u16{
