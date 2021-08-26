@@ -29,7 +29,15 @@ impl VoxelChunk{
 	}
 
 	pub fn get_voxel(&self,s_x:usize,s_y:usize,s_z:usize) -> &u16{
-		let voxel = self.data.get(s_x).unwrap().get(s_y).unwrap().get(s_z);
+		let voxel3:Option<u16> = self.data.get(s_x);
+		let voxel2:Option<u16>;
+		
+		match voxel3{
+			Some(x) => voxel2 = &voxel3.unwrap().get(s_y)
+		}
+		
+		
+		let voxel:Option<u16> = &voxel2.unwrap().get(s_z);
 //		let voe = &voxl.unwrap().get(s_y);
 //		let voxel = &voe.unwrap().get(s_z);
 		
