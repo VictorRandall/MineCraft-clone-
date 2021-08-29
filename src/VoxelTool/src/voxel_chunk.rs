@@ -28,15 +28,10 @@ impl VoxelChunk{
 		}
 	}
 
-	pub fn get_voxel(&self,s_x:usize,s_y:usize,s_z:usize) -> &u16{
-		let voxel = self.data.get(s_x).unwrap().get(s_y).unwrap().get(s_z);
-//		let voe = &voxl.unwrap().get(s_y);
-//		let voxel = &voe.unwrap().get(s_z);
-		
-		match voxel{
-			Some(x) => return &x,
-			None	=> return &0u16,
-		}
+	pub fn get_voxel(&self,x:usize,y:usize,z:usize) -> u16 {
+		if x < self.size && y < self.size && z < self.size {
+			self.data[x][y][z]
+		} else { 0u16 }
 	}
 
 	pub fn start(&mut self, owner: &Spatial){
@@ -110,7 +105,7 @@ impl VoxelChunk{
 		let offset_uv_x:f32 = 0.0;
 		let offset_uv_y:f32 = 0.0;
 
-		if self.get_voxel(offset_x as usize,offset_y as usize, offset_z as usize) == &0u16{
+		if self.get_voxel(offset_x as usize,offset_y as usize, offset_z as usize) == 0u16{
 			godot_print!("the id is 0");
 			return;
 		}
@@ -120,7 +115,7 @@ impl VoxelChunk{
 
 		//top
 //		godot_print!("pos = Vector3({},{},{})",offset_x as usize,(offset_y + 1.0f32) as usize,offset_z as usize);
-		if self.get_voxel(offset_x as usize,(offset_y + 1.0f32) as usize, offset_z as usize) == &0u16{
+		if self.get_voxel(offset_x as usize,(offset_y + 1.0f32) as usize, offset_z as usize) == 0u16{
 			godot_print!("true top");
 			st.add_uv(Vector2::new(0.0, 0.0));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
@@ -138,7 +133,7 @@ impl VoxelChunk{
 		}
 			
 		//botton
-		if self.get_voxel(offset_x as usize,(offset_y - 1.0f32) as usize, offset_z as usize) == &0u16{
+		if self.get_voxel(offset_x as usize,(offset_y - 1.0f32) as usize, offset_z as usize) == 0u16{
 			godot_print!("true botton");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
@@ -156,7 +151,7 @@ impl VoxelChunk{
 		}
 
 	//	left
-		if self.get_voxel((offset_x - 1.0f32) as usize, offset_y as usize, offset_z as usize) == &0u16{
+		if self.get_voxel((offset_x - 1.0f32) as usize, offset_y as usize, offset_z as usize) == 0u16{
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -173,7 +168,7 @@ impl VoxelChunk{
 		}
 
 	//	right
-//		if self.get_voxel((offset_x + 1.0f32) as usize, offset_y as usize, offset_z as usize) == &0u16{
+		if self.get_voxel((offset_x + 1.0f32) as usize, offset_y as usize, offset_z as usize) == 0u16{
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -187,36 +182,40 @@ impl VoxelChunk{
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
-//		}
+		}
 		
 	//	front
-		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
-		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
-		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
+		if self.get_voxel(offset_x as usize, offset_y as usize, (offset_z + 1.0f32) as usize) == 0u16{
+			st.add_uv(Vector2::new(0.0, 0.25));
+			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
+			st.add_uv(Vector2::new(0.25, 0.0));
+			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
+			st.add_uv(Vector2::new(0.0, 0.0));
+			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
 
-		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
-		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
-		st.add_uv(Vector2::new(0.25, 0.25));
-		st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
+			st.add_uv(Vector2::new(0.0, 0.25));
+			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
+			st.add_uv(Vector2::new(0.25, 0.0));
+			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
+			st.add_uv(Vector2::new(0.25, 0.25));
+			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
+		}
 
 	//	back
-		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
-		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
-		st.add_uv(Vector2::new(0.0, 0.0));
-		st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,0.0+offset_z));
-		
-		st.add_uv(Vector2::new(0.0, 0.25));
-		st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
-		st.add_uv(Vector2::new(0.25, 0.0));
-		st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
-		st.add_uv(Vector2::new(0.25, 0.25));
-		st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
+		if self.get_voxel(offset_x as usize, offset_y as usize, (offset_z - 1.0f32) as usize) == 0u16{
+			st.add_uv(Vector2::new(0.0, 0.25));
+			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
+			st.add_uv(Vector2::new(0.25, 0.0));
+			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
+			st.add_uv(Vector2::new(0.0, 0.0));
+			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,0.0+offset_z));
+			
+			st.add_uv(Vector2::new(0.0, 0.25));
+			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
+			st.add_uv(Vector2::new(0.25, 0.0));
+			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
+			st.add_uv(Vector2::new(0.25, 0.25));
+			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
+		}
 	}
 }
