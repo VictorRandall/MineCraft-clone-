@@ -39,14 +39,14 @@ impl VoxelChunk{
 		if self.update == true{
 //			std::thread::spawn(||{
 //				let noise = OpenSimplexNoise::new();
-//				let meshinst = MeshInstance::new();
-				let meshinst = unsafe {
-					owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap()
-				};
+				let meshinst = MeshInstance::new();
+//				let meshinst = unsafe {
+//					owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap()
+//				};
 				for x in 0..self.size as i32{
 					for y in 0..self.size as i32{
 						for z in 0..self.size as i32{
-							if 4.0f64 > y as f64{ //noise.get_noise_2d(x as f64, z as f64)*5f64+10f64{
+							if 8.0f64 > y as f64{ //noise.get_noise_2d(x as f64, z as f64)*5f64+10f64{
 								self.data[x as usize][y as usize][z as usize] = 1u16;
 							}//else{
 //								self.data[x as usize ][y as usize][z as usize] = 0u16;
@@ -106,17 +106,17 @@ impl VoxelChunk{
 		let offset_uv_y:f32 = 0.0;
 
 		if self.get_voxel(offset_x as usize,offset_y as usize, offset_z as usize) == 0u16{
-			godot_print!("the id is 0");
+//			godot_print!("the id is 0");
 			return;
 		}
-		godot_print!("the id is 1");
+//		godot_print!("the id is 1");
 //		
 //		
 
 		//top
 //		godot_print!("pos = Vector3({},{},{})",offset_x as usize,(offset_y + 1.0f32) as usize,offset_z as usize);
 		if self.get_voxel(offset_x as usize,(offset_y + 1.0f32) as usize, offset_z as usize) == 0u16{
-			godot_print!("true top");
+			godot_print!("top t");
 			st.add_uv(Vector2::new(0.0, 0.0));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -130,11 +130,11 @@ impl VoxelChunk{
 			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
-		}
+		}//else{godot_print!("top f");}
 			
 		//botton
-		if self.get_voxel(offset_x as usize,(offset_y - 1.0f32) as usize, offset_z as usize) == 0u16{
-			godot_print!("true botton");
+//		if self.get_voxel(offset_x as usize,(offset_y - 1.0f32) as usize, offset_z as usize) == 0u16{
+			godot_print!("botton t");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -148,10 +148,11 @@ impl VoxelChunk{
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
-		}
+//		}//else{godot_print!("botton f");}
 
 	//	left
-		if self.get_voxel((offset_x - 1.0f32) as usize, offset_y as usize, offset_z as usize) == 0u16{
+		if self.get_voxel((offset_x + 1.0f32) as usize, offset_y as usize, offset_z as usize) == 0u16{
+			godot_print!("left t");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -165,10 +166,11 @@ impl VoxelChunk{
 			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
-		}
+		}//else{godot_print!("left f");}
 
 	//	right
-		if self.get_voxel((offset_x + 1.0f32) as usize, offset_y as usize, offset_z as usize) == 0u16{
+		if self.get_voxel((offset_x - 1.0f32) as usize, offset_y as usize, offset_z as usize) == 0u16{
+			godot_print!("right t");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -182,10 +184,11 @@ impl VoxelChunk{
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
-		}
+		}//else{godot_print!("right f");}
 		
 	//	front
 		if self.get_voxel(offset_x as usize, offset_y as usize, (offset_z + 1.0f32) as usize) == 0u16{
+			godot_print!("front t");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -199,10 +202,11 @@ impl VoxelChunk{
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
-		}
+		}//else{godot_print!("front f");}
 
 	//	back
 		if self.get_voxel(offset_x as usize, offset_y as usize, (offset_z - 1.0f32) as usize) == 0u16{
+			godot_print!("back t");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -216,6 +220,6 @@ impl VoxelChunk{
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
-		}
+		}//else{godot_print!("back f");}
 	}
 }
