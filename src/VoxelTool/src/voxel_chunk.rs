@@ -28,8 +28,8 @@ impl VoxelChunk{
 		}
 	}
 
-	pub fn get_voxel(&self,x:usize,y:usize,z:usize) -> u16 {
-		if x < self.size && y < self.size && z < self.size {
+	pub fn get_voxel(&self,x:f32,y:f32,z:f32) -> u16 {
+		if x < self.size as f32 && y < self.size as f32 && z < self.size as f32 {
 			self.data[x][y][z]
 		} else { 0u16 }
 	}
@@ -116,7 +116,7 @@ impl VoxelChunk{
 		//top
 //		godot_print!("pos = Vector3({},{},{})",offset_x as usize,(offset_y + 1.0f32) as usize,offset_z as usize);
 		if self.get_voxel(offset_x as usize,(offset_y + 1.0f32) as usize, offset_z as usize) == 0u16{
-			godot_print!("top t");
+//			godot_print!("top t");
 			st.add_uv(Vector2::new(0.0, 0.0));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -133,8 +133,8 @@ impl VoxelChunk{
 		}//else{godot_print!("top f");}
 			
 		//botton
-//		if self.get_voxel(offset_x as usize,(offset_y - 1.0f32) as usize, offset_z as usize) == 0u16{
-			godot_print!("botton t");
+		if self.get_voxel(offset_x as usize,(offset_y + 1.0f32) as usize, offset_z as usize) == 0u16{
+//			godot_print!("botton t");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -148,11 +148,11 @@ impl VoxelChunk{
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
-//		}//else{godot_print!("botton f");}
+		}//else{godot_print!("botton f");}
 
 	//	left
 		if self.get_voxel((offset_x + 1.0f32) as usize, offset_y as usize, offset_z as usize) == 0u16{
-			godot_print!("left t");
+//			godot_print!("left t");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -169,8 +169,8 @@ impl VoxelChunk{
 		}//else{godot_print!("left f");}
 
 	//	right
-		if self.get_voxel((offset_x - 1.0f32) as usize, offset_y as usize, offset_z as usize) == 0u16{
-			godot_print!("right t");
+		if self.get_voxel((offset_x + 1.0f32) as usize, offset_y as usize, offset_z as usize) == 0u16{
+//			godot_print!("right t");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -188,7 +188,7 @@ impl VoxelChunk{
 		
 	//	front
 		if self.get_voxel(offset_x as usize, offset_y as usize, (offset_z + 1.0f32) as usize) == 0u16{
-			godot_print!("front t");
+//			godot_print!("front t");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
@@ -206,7 +206,7 @@ impl VoxelChunk{
 
 	//	back
 		if self.get_voxel(offset_x as usize, offset_y as usize, (offset_z - 1.0f32) as usize) == 0u16{
-			godot_print!("back t");
+//			godot_print!("back t");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
