@@ -1,7 +1,6 @@
-
 use std;
 use rand::Rng;
-use gdnative::api::{ArrayMesh, Mesh, MeshInstance, OpenSimplexNoise, SurfaceTool, Spatial, StaticBody};
+use gdnative::api::{Spatial};
 use gdnative::prelude::*;
 
 mod voxel_chunk;
@@ -12,8 +11,10 @@ use voxel_chunk::VoxelChunk;
 #[inherit(Spatial)]
 pub struct VoxelTerrain{
 	chunks: Vec<VoxelChunk>,
-	seed:u64,
-	chunk_size: u32,
+	seed:i64,
+	chunk_size: usize,
+//	#[property]
+//	material:Material
 }
 
 #[methods]
@@ -22,22 +23,30 @@ impl VoxelTerrain {
 		VoxelTerrain{
 			chunks: Vec::<VoxelChunk>::new(),
 			seed: rand::thread_rng().gen(),
-			chunk_size: 16,
+			chunk_size: 50,
+//			material:mtrl
 		}
 	}
 
 
 	#[export]
-	fn _ready(&mut self, _owner: &Spatial) {
-		godot_print!("{}",self.seed);
-//		let a = Array3::new();
-		for x in 0..2{
-			for y in 0..2{
-				for z in 0..2{
-					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32 * 2f32,y as f32 * 2f32,z as f32 * 2f32),10usize));
+	fn _ready(&mut self, owner: &Spatial) {
+		godot_print!("{:#?}",self.seed);
+		for x in 0..4{
+			for y in 0..1{
+				for z in 0..4{
+					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32 * 29f32 - 1.0f32,y as f32 * 29f32 - 1.0f32,z as f32 * 29f32 - 1.0f32),30usize, self.seed));
+					godot_print!("Vector3({},{},{})", x as f32 * 50f32,y as f32 * 50f32,z as f32 * 50f32);
+//					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32,y as f32,z as f32),50usize, self.seed));
 				}
 			}
 		}
+		for i in 0..self.chunks.len(){
+			self.chunks[i].start(&owner);
+//			self.chunks[i].restart(&owner);
+		}
+//		let a = Array3::new();
+		
 	}
 	#[export]
 	fn _process(&mut self, owner: &Spatial, _delta: f64){
@@ -61,11 +70,7 @@ impl VoxelTerrain {
 //			}
 //		};
 		
-
-		for i in 0..self.chunks.len(){
-			self.chunks[i].start(&owner);
-//			self.chunks[i].restart(&owner);
-		}
+		
 	}
 
 }

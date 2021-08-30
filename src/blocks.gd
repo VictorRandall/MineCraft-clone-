@@ -5,12 +5,12 @@ const chunk_amount = 15
 
 
 
-var noise_seed
-var chunks = {}
-var unready_chunks = {}
-var thread
+var noise_seed:int
+var chunks:Dictionary = {}
+var unready_chunks:Dictionary = {}
+var thread:Thread
 
-func _ready():
+func _ready() -> void:
 	randomize()
 	noise_seed = randi()
 	thread = Thread.new()

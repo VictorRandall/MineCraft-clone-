@@ -4,7 +4,7 @@ use gdnative::prelude::*;
 pub struct Voxel<T,Y,R,S>{
 	solid:bool,
 	id:u16,
-//	mesh:Vec<Option<gdnative::Ref<ArrayMesh, gdnative::prelude::Unique>>>,
+	mesh:Vec<Vec<f32>>,
 	parameters:Option<Vec<T>>,
 	parameters2:Option<Vec<Y>>,
 	parameters3:Option<Vec<R>>,
@@ -16,7 +16,7 @@ impl<T,Y,R,S> Voxel<T,Y,R,S>{
 		return Voxel{
 			solid:sld,
 			id:id,
-//			mesh:vec![Some(gdnative::Ref<ArrayMesh, gdnative::prelude::Unique>]),
+			mesh:vec![vec![],vec![]],
 			parameters:prmtrs,
 			parameters2:prmtrs2,
 			parameters3:prmtrs3,
