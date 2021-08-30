@@ -12,6 +12,7 @@ use voxel_chunk::VoxelChunk;
 pub struct VoxelTerrain{
 	chunks: Vec<VoxelChunk>,
 	seed:i64,
+	seed2:i64,
 	chunk_size: usize,
 //	#[property]
 //	material:Material
@@ -23,6 +24,7 @@ impl VoxelTerrain {
 		VoxelTerrain{
 			chunks: Vec::<VoxelChunk>::new(),
 			seed: rand::thread_rng().gen(),
+			seed2: rand::thread_rng().gen(),
 			chunk_size: 50,
 //			material:mtrl
 		}
@@ -33,9 +35,9 @@ impl VoxelTerrain {
 	fn _ready(&mut self, owner: &Spatial) {
 		godot_print!("{:#?}",self.seed);
 		for x in 0..4{
-			for y in 0..1{
+			for y in 0..4{
 				for z in 0..4{
-					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32 * 29f32 - 1.0f32,y as f32 * 29f32 - 1.0f32,z as f32 * 29f32 - 1.0f32),30usize, self.seed));
+					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32 * 50f32 - 1.0f32,y as f32 * 50f32 - 1.0f32,z as f32 * 50f32 - 1.0f32),51usize, self.seed, self.seed2));
 					godot_print!("Vector3({},{},{})", x as f32 * 50f32,y as f32 * 50f32,z as f32 * 50f32);
 //					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32,y as f32,z as f32),50usize, self.seed));
 				}
