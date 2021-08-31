@@ -3,29 +3,36 @@
 [ext_resource path="res://Player.gd" type="Script" id=1]
 
 [sub_resource type="CylinderShape" id=1]
-height = 6.0
-
-[sub_resource type="CylinderMesh" id=2]
-top_radius = 0.25
 height = 4.0
 
+[sub_resource type="CylinderMesh" id=2]
+top_radius = 0.063
+bottom_radius = 0.551
+height = 3.327
+
 [sub_resource type="CubeMesh" id=3]
+size = Vector3( 1.5, 1.5, 1.5 )
 
 [node name="KinematicBody" type="KinematicBody"]
 script = ExtResource( 1 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.98689, 0 )
 shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.63518, 0 )
 mesh = SubResource( 2 )
 material/0 = null
 
 [node name="Spatial" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.12832, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.32375, 0 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="Camera" type="Camera" parent="Spatial"]
+current = true
 
 [node name="MeshInstance" type="MeshInstance" parent="Spatial"]
 mesh = SubResource( 3 )

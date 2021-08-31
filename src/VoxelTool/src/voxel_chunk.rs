@@ -31,7 +31,8 @@ impl VoxelChunk{
 			seed2:nseed2,
 		}
 	}
-
+	
+	
 	pub fn get_voxel(&self,x:f32,y:f32,z:f32) -> u16 {
 		if x < self.size as f32	&& x > 0.0f32 && y < self.size as f32 && y > 0.0f32 && z < self.size as f32 && z > 0.0f32 {
 			self.data[x as usize][y as usize][z as usize]

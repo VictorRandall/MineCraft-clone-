@@ -31,3 +31,4 @@ mesh = SubResource( 3 )
 material/0 = null
 
 [node name="KinematicBody" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 91.8824, 161.665, 70.6292 )
