@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Player.gd" type="Script" id=1]
+
+[sub_resource type="CylinderShape" id=1]
+height = 6.0
+
+[sub_resource type="CylinderMesh" id=2]
+top_radius = 0.25
+height = 4.0
+
+[sub_resource type="CubeMesh" id=3]
+
+[node name="KinematicBody" type="KinematicBody"]
+script = ExtResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="Spatial" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.12832, 0 )
+
+[node name="Camera" type="Camera" parent="Spatial"]
+
+[node name="MeshInstance" type="MeshInstance" parent="Spatial"]
+mesh = SubResource( 3 )
+material/0 = null
