@@ -36,4 +36,4 @@ func _process(delta: float) -> void:
 		if Input.is_action_pressed("gp_jump"):
 			moviment.y += 10.0;
 	
-	move_and_slide(moviment, Vector3.UP);
+	moviment = move_and_slide(moviment, Vector3.UP);
