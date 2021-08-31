@@ -34,9 +34,9 @@ impl VoxelTerrain {
 	#[export]
 	fn _ready(&mut self, owner: &Spatial) {
 		godot_print!("{:#?}",self.seed);
-		for x in 0..4{
-			for y in 0..4{
-				for z in 0..4{
+		for x in 0..1{
+			for y in 0..1{
+				for z in 0..1{
 					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32 * 50f32 - 1.0f32,y as f32 * 50f32 - 1.0f32,z as f32 * 50f32 - 1.0f32),51usize, self.seed, self.seed2));
 					godot_print!("Vector3({},{},{})", x as f32 * 50f32,y as f32 * 50f32,z as f32 * 50f32);
 //					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32,y as f32,z as f32),50usize, self.seed));
