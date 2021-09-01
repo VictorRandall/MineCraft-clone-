@@ -30,9 +30,26 @@ impl VoxelTerrain {
 		}
 	}
 
+	//FIXME: this function doesnt return the real voxel data
+//	if raycast.is_colliding():
+//		var norm = raycast.get_collision_normal()
+//		var pos = raycast.get_collision_point() - norm * 0.5
+//		
+//		var bx = floor(pos.x) + 0.5
+//		var by = floor(pos.y) + 0.5
+//		var bz = floor(pos.z) + 0.5
+//		var bpos = Vector3(bx, by, bz) - self.translation
+//		
+//		block_outline.translation = bpos
+//		block_outline.visible = true
+//		
+//		if Input.is_action_just_pressed("Break"):
+//			emit_signal("break_block", pos)
+//		if Input.is_action_just_pressed("Place"):
+//			emit_signal("place_block", pos + norm, Global.STONE)
 	#[export]
-	fn get_voxel(&self, owner: &Spatial, x:i32, y:i32, z:i32){
-		
+	fn get_voxel(&self, owner: &Spatial, x:i32, y:i32, z:i32) -> u32{
+		return 1u32
 		
 	}
 	#[export]

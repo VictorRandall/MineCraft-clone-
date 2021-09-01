@@ -1,7 +1,7 @@
 extends KinematicBody
 
 var moviment: Vector3 = Vector3();
-var speed:float = 15.0
+var speed:float = 5.0
 var G:float = -10.0;
 var cam_mov:float = 0.2;
 onready var cam:Spatial = $Spatial;
@@ -18,15 +18,21 @@ func _input(event: InputEvent) -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	moviment = Vector3(0,moviment.y,0);
+	if moviment.x != 0 and moviment.z != 0:
+		moviment.x = lerp(moviment.x, 0, delta * 3);
+		moviment.z = lerp(moviment.z, 0, delta * 3);
+		print(lerp(moviment.x, 0, delta * 3));
+		print(lerp(moviment.z, 0, delta * 3));
 	
+#	print();
 	if Input.is_action_pressed("gp_up"):
 		moviment += -transform.basis.z * speed;
-	if Input.is_action_pressed("gp_down"):
+	elif Input.is_action_pressed("gp_down"):
 		moviment += transform.basis.z * speed;
+	
 	if Input.is_action_pressed("gp_left"):
 		moviment += -transform.basis.x * speed;
-	if Input.is_action_pressed("gp_right"):
+	elif Input.is_action_pressed("gp_right"):
 		moviment += transform.basis.x * speed;
 	
 	if not is_on_floor():
