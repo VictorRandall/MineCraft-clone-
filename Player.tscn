@@ -37,3 +37,6 @@ current = true
 [node name="MeshInstance" type="MeshInstance" parent="Spatial"]
 mesh = SubResource( 3 )
 material/0 = null
+
+[node name="RayCast" type="RayCast" parent="Spatial"]
+cast_to = Vector3( 0, 0, -10 )
