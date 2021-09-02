@@ -36,6 +36,17 @@ impl VoxelTerrain {
 		return 1u32
 		
 	}
+
+
+//      TODO: make a hashmap (dictionary but in rust) to store the chunks instead of a vec (array but in rust)
+        fn add_chunk(x:i32, y:i32, z:i32){
+                return
+        }
+
+        fn get_chunk(x:i32, y:i32, z:i32){
+                return
+        }
+
 	#[export]
 	fn _ready(&mut self, owner: &Spatial) {
 		godot_print!("{:#?}",self.seed);
