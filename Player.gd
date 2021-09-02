@@ -21,10 +21,12 @@ func _input(event: InputEvent) -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if moviment.x != 0 and moviment.z != 0:
-		moviment.x = lerp(moviment.x, 0, delta * 3);
-		moviment.z = lerp(moviment.z, 0, delta * 3);
-		print(lerp(moviment.x, 0, delta * 3));
-		print(lerp(moviment.z, 0, delta * 3));
+#		moviment.x = lerp(moviment.x, 0, delta * 3);
+#		moviment.z = lerp(moviment.z, 0, delta * 3);
+		moviment.x = 0;
+		moviment.z = 0;
+#		print(lerp(moviment.x, 0, delta * 3));
+#		print(lerp(moviment.z, 0, delta * 3));
 	
 	if raycast.is_colliding():
 		var norm = raycast.get_collision_normal();

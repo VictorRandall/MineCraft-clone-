@@ -44,40 +44,37 @@ impl VoxelTerrain {
 				for z in 0..4{
 					self.chunks.insert(x + y + z,VoxelChunk::new(Vector3::new(x as f32 * 10f32 - 1.0f32,y as f32 * 10f32 - 1.0f32,z as f32 * 10f32 - 1.0f32),11usize, self.seed, self.seed2));
 					godot_print!("{}", x + y + z);
+//					self.chunks[i].generate(&owner, x as i32, y as i32, z as i32);
 //					self.chunks.push(VoxelChunk::new(Vector3::new(x as f32,y as f32,z as f32),50usize, self.seed));
 				}
 			}
 		}
 		for i in 0..self.chunks.len(){
-			self.chunks[i].start(&owner);
+//			for x in 0..4{
+//				for y in 0..4{
+//					for z in 0..4{
+//						self.chunks[i].generate(&owner, x as i32, y as i32, z as i32);
+//			}}}
+			self.chunks[i].generate(&owner);
 //			self.chunks[i].restart(&owner);
 		}
-//		let a = Array3::new();
-		
 	}
 	#[export]
 	fn _process(&mut self, owner: &Spatial, _delta: f64){
-		let input = Input::godot_singleton();
-//		let label = unsafe {owner.get_node("Label").unwrap().assume_safe().cast::<Label>().unwrap()};
-		
-//		if input.is_action_pressed("test"){
-//			for i in 0..self.chunks.len(){
-//				self.chunks[i].size += 1usize;
-//				self.chunks[i].size += 1usize;
-//				self.chunks[i].size += 1usize;
-//				self.chunks[i].update = true;
-//			}
-//			self.chunks.push(VoxelChunk::new(Vector3::new(self.chunks.len() as f32 + 0.0 ,0.0,0.0),1,1,1));
-//		}else if input.is_action_pressed("test2"){
-//			for i in 0..self.chunks.len(){
-//				self.chunks[i].size -= 1usize;
-//				self.chunks[i].size -= 1usize;
-//				self.chunks[i].size -= 1usize;
-//				self.chunks[i].update = true;
-//			}
-//		};
-		
-		
+		let player = unsafe {
+			owner.get_node("../KinematicBody").unwrap().assume_safe().cast::<KinematicBody>().unwrap()
+		};
+//		let player_old_pos: Vec<i32;3usize> = player.translation();
+		let player_new_pos: Vec<i32> = vec![
+		(player.translation().x / 10.0f32) as i32,
+		(player.translation().y / 10.0f32) as i32,
+		(player.translation().z / 10.0f32) as i32];
+		godot_print!("Vector3(x{}, y{}, z{})\nVector3(cx{}, cy{}, cz{})",
+			player.translation().x, player.translation().y, player.translation().z,
+			player_new_pos[0], player_new_pos[1], player_new_pos[2]);
+//		{
+			
+//		}
 	}
 
 }

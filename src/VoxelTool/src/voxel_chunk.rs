@@ -39,9 +39,9 @@ impl VoxelChunk{
 		} else { 0u16 }
 	}
 
-	pub fn start(&mut self, owner: &Spatial){
+	pub fn generate(&mut self, owner: &Spatial){//,x: i32,y: i32,z: i32
 		godot_print!("{}",self.update);
-		if self.update == true{
+//		if self.update == true{
 //			std::thread::spawn(||{
 				let noise = OpenSimplexNoise::new();
 				let noise2 = OpenSimplexNoise::new();
@@ -58,8 +58,8 @@ impl VoxelChunk{
 						for z in 0..self.size as i32{
 							if 
 								noise.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64) +
-								noise2.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64)
-								*28f64+110f64 > y as f64 + self.pos.y as f64{//+noise2.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64)
+								noise2.get_noise_3d(x as f64 + self.pos.x as f64, y as f64 + self.pos.y as f64, z as f64 + self.pos.z as f64)
+								*28f64+20f64 > y as f64 + self.pos.y as f64{//+noise2.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64)
 								self.data[x as usize][y as usize][z as usize] = 1u16;
 							}//else{
 //								self.data[x as usize ][y as usize][z as usize] = 0u16;
@@ -75,7 +75,7 @@ impl VoxelChunk{
 				owner.add_child(meshinst,true);
 				self.update = false;
 //			});
-		}
+//		}
 	}
 
 	fn chunk_mesh(&self) -> Option<gdnative::Ref<ArrayMesh>>{
