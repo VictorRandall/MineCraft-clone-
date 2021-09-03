@@ -21,7 +21,7 @@ pub struct VoxelChunk{
 //#[methods]
 impl VoxelChunk{
 //	#[export]
-	pub fn new(position:Vector3,s:usize,nseed:i64,nseed2:i64) -> Self {
+	pub fn new(position:Vector3,s:usize,nseed:i64) -> Self {//,nseed2:i64
 		VoxelChunk{
 			pos:position,
 			size:s,
