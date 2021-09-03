@@ -28,7 +28,7 @@ impl VoxelChunk{
 			data: vec![vec![vec![0u16;s];s];s],//the default value is 8
 			update:true,
 			seed:nseed,
-			seed2:nseed2,
+			//seed2:nseed2,
 		}
 	}
 	
