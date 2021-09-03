@@ -44,21 +44,21 @@ impl VoxelChunk{
 //		if self.update == true{
 //			std::thread::spawn(||{
 				let noise = OpenSimplexNoise::new();
-				let noise2 = OpenSimplexNoise::new();
+//				let noise2 = OpenSimplexNoise::new();
 				let meshinst = MeshInstance::new();
 //				let meshinst = unsafe {
 //					owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap()
 //				};
 				noise.set_seed(self.seed);
-				noise.set_octaves(1i64);
-				noise2.set_seed(self.seed2);
+				noise.set_octaves(8i64);
+//				noise2.set_seed(self.seed2);
 //				noise2.set_octaves(2i64);
 				for x in 0..self.size as i32{
 					for y in 0..self.size as i32{
 						for z in 0..self.size as i32{
 							if 
 								noise.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64) +
-								noise2.get_noise_3d(x as f64 + self.pos.x as f64, y as f64 + self.pos.y as f64, z as f64 + self.pos.z as f64)
+								//noise2.get_noise_3d(x as f64 + self.pos.x as f64, y as f64 + self.pos.y as f64, z as f64 + self.pos.z as f64)
 								*28f64+20f64 > y as f64 + self.pos.y as f64{//+noise2.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64)
 								self.data[x as usize][y as usize][z as usize] = 1u16;
 							}//else{
@@ -106,7 +106,7 @@ impl VoxelChunk{
 		return Some(mesh);
 	}
 
-//	fn restart(&mut self, owner: &Spatial){
+//	fn remove_chunk_node(&mut self, owner: &Spatial){
 //		self.data.clear();
 //		godot_print!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z);
 //		unsafe {
