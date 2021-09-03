@@ -24,7 +24,7 @@ impl VoxelTerrain {
 		VoxelTerrain{
 			chunks: Vec::<VoxelChunk>::new(),
 			seed: rand::thread_rng().gen(),
-			seed2: rand::thread_rng().gen(),
+			//seed2: rand::thread_rng().gen(),
 			chunk_size: 50,
 //			material:mtrl
 		}
