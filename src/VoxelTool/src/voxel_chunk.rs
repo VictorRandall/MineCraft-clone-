@@ -15,7 +15,7 @@ pub struct VoxelChunk{
 	data: Vec<Vec<Vec<u16>>>,
 	update:bool,
 	seed:i64,
-	seed2:i64,
+	//seed2:i64,
 }
 
 //#[methods]
