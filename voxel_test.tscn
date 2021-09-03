@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/new_script.gdns" type="Script" id=1]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=2]
@@ -10,6 +10,9 @@ bounce = 1.0
 [sub_resource type="BoxShape" id=2]
 
 [sub_resource type="CubeMesh" id=3]
+
+[sub_resource type="BoxShape" id=4]
+extents = Vector3( 200, 0.5, 200 )
 
 [node name="Spatial" type="Spatial"]
 
@@ -31,4 +34,24 @@ mesh = SubResource( 3 )
 material/0 = null
 
 [node name="KinematicBody" parent="." instance=ExtResource( 2 )]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 19.4208, 41.5885, 17.333 )
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 41.8197, 96.9573 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 263.0
+margin_bottom = 68.0
+rect_scale = Vector2( 1.5, 1.5 )
+text = "Vector3(x0, y41.81969, z96.95731)
+Vector3(cx0, cy4, cz9
+Vector3(ax4 -4, ay8 0, az13 5)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StaticBody" type="StaticBody" parent="."]
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
+shape = SubResource( 4 )
+
+[node name="MeshInstance" type="MeshInstance" parent="StaticBody"]

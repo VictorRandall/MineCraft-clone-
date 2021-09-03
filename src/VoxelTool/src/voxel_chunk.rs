@@ -9,6 +9,7 @@ use voxel::Voxel;
 
 //#[derive(NativeClass, Debug)]
 //#[no_constructor]
+#[derive(Debug)]
 pub struct VoxelChunk{
 	pos:Vector3,
 	size:usize,
@@ -50,15 +51,16 @@ impl VoxelChunk{
 //					owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap()
 //				};
 				noise.set_seed(self.seed);
-				noise.set_octaves(8i64);
+				noise.set_octaves(5i64);
+				noise.set_period(100.0f64);
 //				noise2.set_seed(self.seed2);
 //				noise2.set_octaves(2i64);
 				for x in 0..self.size as i32{
 					for y in 0..self.size as i32{
 						for z in 0..self.size as i32{
 							if 
-								noise.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64) +
-								//noise2.get_noise_3d(x as f64 + self.pos.x as f64, y as f64 + self.pos.y as f64, z as f64 + self.pos.z as f64)
+//								noise.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64) -
+								noise.get_noise_3d(x as f64 + self.pos.x as f64, y as f64 + self.pos.y as f64, z as f64 + self.pos.z as f64)
 								*28f64+20f64 > y as f64 + self.pos.y as f64{//+noise2.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64)
 								self.data[x as usize][y as usize][z as usize] = 1u16;
 							}//else{
@@ -68,7 +70,7 @@ impl VoxelChunk{
 					}
 				}
 //				godot_print!("{:#?}", self.data);
-				meshinst.set_mesh(self.chunk_mesh().expect("onosecond"));
+				meshinst.set_mesh(self.generate_mesh().expect("onosecond"));
 				meshinst.set_translation(self.pos);
 				meshinst.set_name(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z));
 				meshinst.create_trimesh_collision();
@@ -78,7 +80,7 @@ impl VoxelChunk{
 //		}
 	}
 
-	fn chunk_mesh(&self) -> Option<gdnative::Ref<ArrayMesh>>{
+	fn generate_mesh(&self) -> Option<gdnative::Ref<ArrayMesh>>{
 		let st = SurfaceTool::new();
 
 		st.begin(Mesh::PRIMITIVE_TRIANGLES);
@@ -106,13 +108,13 @@ impl VoxelChunk{
 		return Some(mesh);
 	}
 
-//	fn remove_chunk_node(&mut self, owner: &Spatial){
-//		self.data.clear();
-//		godot_print!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z);
-//		unsafe {
-//			owner.get_node(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z)).unwrap().assume_safe().cast::<MeshInstance>().unwrap().queue_free();
-//		};
-//	}
+	pub fn remove_chunk_node(&mut self, owner: &Spatial){
+		self.data.clear();
+		godot_print!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z);
+		unsafe {
+			owner.get_node(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z)).unwrap().assume_safe().cast::<MeshInstance>().unwrap().queue_free();
+		};
+	}
 
 	fn custom_voxel(&self,st:&Ref<SurfaceTool, Unique>, pos:Vector3){
 		

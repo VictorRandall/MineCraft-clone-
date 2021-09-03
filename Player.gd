@@ -1,7 +1,9 @@
 extends KinematicBody
 
 var moviment: Vector3 = Vector3();
-var speed: float = 5.0
+var speed: float
+var w_speed: float = 12.0
+var r_speed: float = 24.0
 var G: float = -10.0;
 var cam_mov: float = 0.2;
 
@@ -55,6 +57,11 @@ func _process(delta: float) -> void:
 		moviment += -transform.basis.x * speed;
 	elif Input.is_action_pressed("gp_right"):
 		moviment += transform.basis.x * speed;
+	
+	if Input.is_action_pressed("gp_sprint"):
+		speed = r_speed;
+	else:
+		speed = w_speed;
 	
 	if not is_on_floor():
 		moviment.y -= -G * delta;

@@ -33,6 +33,7 @@ __meta__ = {
 
 [node name="Camera" type="Camera" parent="Spatial"]
 current = true
+far = 8192.0
 
 [node name="MeshInstance" type="MeshInstance" parent="Spatial"]
 mesh = SubResource( 3 )

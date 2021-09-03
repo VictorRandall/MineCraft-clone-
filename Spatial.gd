@@ -1,24 +1,17 @@
 extends Spatial
-tool
 
-onready var mshinst = get_node("MeshInstance")
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 
+var array: Array = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var st = SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	
-	
-	st.add_triangle_fan([Vector3(0,0,0),Vector3(1,0,0),Vector3(1,0,1)],[Vector2(0,0),Vector2(1,0),Vector2(1,1)])
-	
-	st.generate_normals()
-	mshinst.mesh = st.commit()
+	array.append(1)
+	array.append(2)
+	array.remove(1)
+	array.insert(0,"ghey")
+	print(array)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _process(delta) -> void:
+	pass
