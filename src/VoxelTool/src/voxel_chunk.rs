@@ -14,7 +14,7 @@ pub struct VoxelChunk{
 	pos:Vector3,
 	size:usize,
 	data: Vec<Vec<Vec<u16>>>,
-	update:bool,
+	should_remove:bool,
 	seed:i64,
 	//seed2:i64,
 }
@@ -27,10 +27,14 @@ impl VoxelChunk{
 			pos:position,
 			size:s,
 			data: vec![vec![vec![0u16;s];s];s],//the default value is 8
-			update:true,
+			should_remove:false,
 			seed:nseed,
 			//seed2:nseed2,
 		}
+	}
+	
+	pub fn set_should_remove(&mut self, state:bool){
+		self.should_remove = state
 	}
 	
 	
@@ -41,7 +45,7 @@ impl VoxelChunk{
 	}
 
 	pub fn generate(&mut self, owner: &Spatial){//,x: i32,y: i32,z: i32
-		godot_print!("{}",self.update);
+//		godot_print!("{}",self.update);
 //		if self.update == true{
 //			std::thread::spawn(||{
 				let noise = OpenSimplexNoise::new();
@@ -75,7 +79,7 @@ impl VoxelChunk{
 				meshinst.set_name(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z));
 				meshinst.create_trimesh_collision();
 				owner.add_child(meshinst,true);
-				self.update = false;
+//				self.update = false;
 //			});
 //		}
 	}
@@ -109,7 +113,7 @@ impl VoxelChunk{
 	}
 
 	pub fn remove_chunk_node(&mut self, owner: &Spatial){
-		self.data.clear();
+		self.data.clear();	
 		godot_print!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z);
 		unsafe {
 			owner.get_node(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z)).unwrap().assume_safe().cast::<MeshInstance>().unwrap().queue_free();
@@ -127,7 +131,7 @@ impl VoxelChunk{
 
 		if self.get_voxel(offset_x,offset_y, offset_z) == 0u16{
 //			godot_print!("the id is 0");
-			return;
+			return;		
 		}
 //		godot_print!("the id is 1");
 //		

@@ -40,24 +40,26 @@ impl VoxelTerrain {
 //	#[export]
 	fn add_chunk(&mut self,owner: &Spatial,x:i32, y:i32, z:i32){
 		if self.chunks.contains_key(&format!("{},{},{}", x, y, z)){
-			return;
+			return	;
 		}
 		godot_print!("generated chunk at {},{},{}", x, y, z);
 		self.chunks.insert(
 			format!("{},{},{}", x, y, z),
-			VoxelChunk::new(Vector3::new(x as f32 * chunk_size as f32 - 1.0f32,y as f32 * chunk_size as f32 - 1.0f32,z as f32 * chunk_size as f32 - 1.0f32),
-			(chunk_size + 1) as usize, 
+			VoxelChunk::new(Vector3::new(x as f32 * self.chunk_size as f32 - 1.0f32,y as f32 * self.chunk_size as f32 - 1.0f32,z as f32 * self.chunk_size as f32 - 1.0f32),
+			(self.chunk_size + 1) as usize, 
 			self.seed)
 		);//, self.seed2
 		self.chunks.get_mut(&format!("{},{},{}", x, y, z)).unwrap().generate(&owner);
 	}
 
-	fn get_chunk(x:i32, y:i32, z:i32){
-		return;
+	fn get_chunk(&mut self, owner: &Spatial, x:i32, y:i32, z:i32) -> Option<&mut VoxelChunk>{
+		return self.chunks.get_mut(&format!("{},{},{}", x, y, z));
 	}
 
-	fn remove_chunk(x:i32, y:i32, z:i32){
-		return;
+	fn remove_chunk(&mut self, owner: &Spatial,x:i32, y:i32, z:i32){
+		let chunk = self.get_chunk(owner,x,y,z).expect("this chunk doesnt exist");
+		
+		
 	}
 
 	#[export]
@@ -67,9 +69,9 @@ impl VoxelTerrain {
 		};
 		
 		let p_pos: Vec<i32> = vec![
-			(player.translation().x / 10.0f32) as i32,
-			(player.translation().y / 10.0f32) as i32,
-			(player.translation().z / 10.0f32) as i32];
+		(player.translation().x / self.chunk_size as f32) as i32,
+		(player.translation().y / self.chunk_size as f32) as i32,
+		(player.translation().z / self.chunk_size as f32) as i32];
 		
 		godot_print!("{:?}",self.chunks);
 //		for x in 30-(p_pos[0]*10)..30+(p_pos[0]*10){
@@ -118,11 +120,11 @@ impl VoxelTerrain {
 		let area:i32 = 4i32;
 		
 		let p_pos: Vec<i32> = vec![
-		(player.translation().x / 10.0f32) as i32,
-		(player.translation().y / 10.0f32) as i32,
-		(player.translation().z / 10.0f32) as i32];
+		(player.translation().x / self.chunk_size as f32) as i32,
+		(player.translation().y / self.chunk_size as f32) as i32,
+		(player.translation().z / self.chunk_size as f32) as i32];
 		
-		label.set_text(format!("Vector3(x{}, y{}, z{})\nVector3(cx{}, cy{}, cz{}\nVector3(ax{} {}, ay{} {}, az{} {})",
+		label.set_text(format!("Vector3(x{}, y{}, z{})\nVector3(cx{}, cy{}, cz{})\nVector3(ax{} {}, ay{} {}, az{} {})",
 			player.translation().x, player.translation().y, player.translation().z,
 			p_pos[0], p_pos[1], p_pos[2],
 			p_pos[0] + area,p_pos[0] - area,
@@ -138,8 +140,12 @@ impl VoxelTerrain {
 					for z in p_pos[2] - area..p_pos[2] + area{
 //						godot_print!("i have aids");
 						self.add_chunk(owner,x,y,z);
+						self.get_chunk(owner,x,y,z).unwrap().set_should_remove(false);
 					}
 				}
+			}
+			for (key, value) in &*self.chunks{
+				godot_print!("key = {}, value = VoxelChunk",key);
 			}
 //		}
 	}

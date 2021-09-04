@@ -4,7 +4,6 @@ const chunk_size = 16
 const chunk_amount = 15
 
 
-
 var noise_seed:int
 var chunks:Dictionary = {}
 var unready_chunks:Dictionary = {}

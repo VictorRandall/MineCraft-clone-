@@ -10,6 +10,7 @@ func _ready() -> void:
 	array.remove(1)
 	array.insert(0,"ghey")
 	print(array)
+	get_tree().reload_current_scene()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
