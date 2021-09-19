@@ -43,8 +43,8 @@ margin_right = 263.0
 margin_bottom = 68.0
 rect_scale = Vector2( 1.5, 1.5 )
 text = "Vector3(x0, y43.0152, z0)
-Vector3(cx0, cy4, cz0
-Vector3(ax4 -4, ay8 0, az4 -4)"
+Vector3(cx0, cy2, cz0)
+Vector3(ax4 -4, ay6 -2, az4 -4)"
 __meta__ = {
 "_edit_use_anchors_": false
 }

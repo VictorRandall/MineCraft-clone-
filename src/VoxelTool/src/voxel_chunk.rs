@@ -33,6 +33,10 @@ impl VoxelChunk{
 		}
 	}
 	
+	pub fn get_position(&self) -> Vec<f32>{
+		return vec![self.pos.x,self.pos.y,self.pos.z]
+	}
+	
 	pub fn set_should_remove(&mut self, state:bool){
 		self.should_remove = state
 	}

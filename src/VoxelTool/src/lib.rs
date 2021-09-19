@@ -25,7 +25,7 @@ impl VoxelTerrain {
 			chunks: std::collections::HashMap::new(),
 			seed: rand::thread_rng().gen(),
 			//seed2: rand::thread_rng().gen(),
-			chunk_size: 10i32,
+			chunk_size: 16i32,
 //			material:mtrl
 		}
 	}
@@ -144,8 +144,8 @@ impl VoxelTerrain {
 					}
 				}
 			}
-			for (key, value) in &*self.chunks{
-				godot_print!("key = {}, value = VoxelChunk",key);
+			for (key,value) in &self.chunks {
+				godot_print!("key is {} and the position of the chunk is Vector3({},{},{})", key, value.get_position()[0],value.get_position()[1],value.get_position()[2]);
 			}
 //		}
 	}
