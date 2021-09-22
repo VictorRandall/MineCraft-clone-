@@ -118,7 +118,7 @@ impl VoxelChunk{
 
 	pub fn remove_chunk_node(&mut self, owner: &Spatial){
 		self.data.clear();	
-		godot_print!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z);
+		godot_print!("deleted node: 'chunk{}{}{}'",self.pos.x,self.pos.y,self.pos.z);
 		unsafe {
 			owner.get_node(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z)).unwrap().assume_safe().cast::<MeshInstance>().unwrap().queue_free();
 		};

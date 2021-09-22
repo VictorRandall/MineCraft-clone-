@@ -58,13 +58,7 @@ func get_chunk(x, z):
 	return null
 
 func _process(delta):
-	update_chunks()
-	clean_up_chunks()
-	reset_chunks()
-#	pass
-	
-func update_chunks():
-	
+#	update_chunks()
 	var player_translation = $Position3D.translation
 	var p_x = int(player_translation.x) / chunk_size
 	var p_y = int(player_translation.y) / chunk_size
@@ -76,14 +70,38 @@ func update_chunks():
 			var chunk = get_chunk(x, z)
 			if chunk != null:
 				chunk.should_remove = false
-
-func clean_up_chunks():
+#	clean_up_chunks()
 	for key in chunks:
 		var chunk = chunks[key]
 		if chunk.should_remove:
 			chunk.queue_free()
 			chunks.erase(key)
-	
-func reset_chunks():
+#	reset_chunks()
 	for key in chunks:
 		chunks[key].should_remove = true
+#	pass
+	
+#func update_chunks():
+#
+#	var player_translation = $Position3D.translation
+#	var p_x = int(player_translation.x) / chunk_size
+#	var p_y = int(player_translation.y) / chunk_size
+#	var p_z = int(player_translation.z) / chunk_size
+#
+#	for x in range(p_x - chunk_amount * 0.5, p_x + chunk_amount * 0.5):
+#		for z in range(p_z - chunk_amount * 0.5, p_z + chunk_amount * 0.5):
+#			add_chunk(x, z)
+#			var chunk = get_chunk(x, z)
+#			if chunk != null:
+#				chunk.should_remove = false
+#
+#func clean_up_chunks():
+#	for key in chunks:
+#		var chunk = chunks[key]
+#		if chunk.should_remove:
+#			chunk.queue_free()
+#			chunks.erase(key)
+#
+#func reset_chunks():
+#	for key in chunks:
+#		chunks[key].should_remove = true
