@@ -41,6 +41,9 @@ impl VoxelChunk{
 		self.should_remove = state
 	}
 	
+	pub fn get_should_remove(&self) -> bool{
+		return self.should_remove
+	}
 	
 	pub fn get_voxel(&self,x:f32,y:f32,z:f32) -> u16 {
 		if x < self.size as f32	&& x > 0.0f32 && y < self.size as f32 && y > 0.0f32 && z < self.size as f32 && z > 0.0f32 {
@@ -59,18 +62,28 @@ impl VoxelChunk{
 //					owner.get_node("MeshInstance").unwrap().assume_safe().cast::<MeshInstance>().unwrap()
 //				};
 				noise.set_seed(self.seed);
-				noise.set_octaves(5i64);
-				noise.set_period(100.0f64);
+//				noise.set_octaves(5i64);
+//				noise.set_period(100.0f64);
 //				noise2.set_seed(self.seed2);
 //				noise2.set_octaves(2i64);
 				for x in 0..self.size as i32{
 					for y in 0..self.size as i32{
 						for z in 0..self.size as i32{
 							if 
-//								noise.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64) -
-								noise.get_noise_3d(x as f64 + self.pos.x as f64, y as f64 + self.pos.y as f64, z as f64 + self.pos.z as f64)
-								*28f64+20f64 > y as f64 + self.pos.y as f64{//+noise2.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64)
+								noise.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64)
+//								*
+//								noise.get_noise_3d(x as f64 + self.pos.x as f64, y as f64 + self.pos.y as f64, z as f64 + self.pos.z as f64)
+//								noise.get_noise_3d(x as f64 + self.pos.x as f64, y as f64 + self.pos.y as f64, z as f64 + self.pos.z as f64)
+								*30f64+20f64 > y as f64 + self.pos.y as f64{//+noise2.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64)
 								self.data[x as usize][y as usize][z as usize] = 1u16;
+								
+								if noise.get_noise_3d(
+									x as f64 + self.pos.x as f64,
+									y as f64 + self.pos.y as f64,
+									z as f64 + self.pos.z as f64) < -0.25{
+										self.data[x as usize][y as usize][z as usize] = 0u16;
+									}
+									
 							}//else{
 //								self.data[x as usize ][y as usize][z as usize] = 0u16;
 //							}

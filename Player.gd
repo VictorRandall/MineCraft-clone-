@@ -49,25 +49,25 @@ func _process(delta: float) -> void:
 	
 #	print();
 	if Input.is_action_pressed("gp_up"):
-		moviment += -transform.basis.z * speed;
+		moviment += -transform.basis.z * speed
 	elif Input.is_action_pressed("gp_down"):
-		moviment += transform.basis.z * speed;
+		moviment += transform.basis.z * speed
 	
 	if Input.is_action_pressed("gp_left"):
-		moviment += -transform.basis.x * speed;
+		moviment += -transform.basis.x * speed
 	elif Input.is_action_pressed("gp_right"):
-		moviment += transform.basis.x * speed;
+		moviment += transform.basis.x * speed
 	
 	if Input.is_action_pressed("gp_sprint"):
-		speed = r_speed;
+		speed = r_speed
 	else:
-		speed = w_speed;
+		speed = w_speed
 	
 	if not is_on_floor():
-		moviment.y -= -G * delta;
+		moviment.y -= -G * delta
 	else:
-		moviment.y = 0.0;
+		moviment.y = 0.0
 		if Input.is_action_pressed("gp_jump"):
-			moviment.y += 10.0;
+			moviment.y += 10.0
 	
-	moviment = move_and_slide(moviment, Vector3.UP);
+	moviment = move_and_slide(moviment, Vector3.UP,true,4,0.785398,true)

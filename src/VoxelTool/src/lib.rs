@@ -52,13 +52,13 @@ impl VoxelTerrain {
 		self.chunks.get_mut(&format!("{},{},{}", x, y, z)).unwrap().generate(&owner);
 	}
 
-	fn get_chunk(&mut self, owner: &Spatial, key:str) -> Option<&mut VoxelChunk>{//x:i32, y:i32, z:i32
+	fn get_chunk(&mut self, owner: &Spatial, key:String) -> Option<&mut VoxelChunk>{//x:i32, y:i32, z:i32
 //		return self.chunks.get_mut(&format!("{},{},{}", x, y, z));
-		return self.chunks.get_mut(key);
+		return self.chunks.get_mut(&key);
 	}
 
 	fn remove_chunk(&mut self, owner: &Spatial,x:i32, y:i32, z:i32){
-		let chunk = self.get_chunk(owner,x,y,z).expect("this chunk doesnt exist");
+		let chunk = self.get_chunk(owner,format!("{},{},{}", x, y, z)).expect("this chunk doesnt exist");
 		chunk.remove_chunk_node(owner)
 		
 		
@@ -119,24 +119,23 @@ impl VoxelTerrain {
 			owner.get_node("../Label").unwrap().assume_safe().cast::<Label>().unwrap()
 		};
 //		let player_old_pos: Vec<i32;3usize> = player.translation();
-		let area:i32 = 4i32;
+		let area:i32 = 2i32;
+		let mut more_text:String = "no chunk has to be removed".to_string();
 		
 		let p_pos: Vec<i32> = vec![
 		(player.translation().x / self.chunk_size as f32) as i32,
 		(player.translation().y / self.chunk_size as f32) as i32,
 		(player.translation().z / self.chunk_size as f32) as i32];
 		
-		label.set_text(format!("Vector3(x{}, y{}, z{})\nVector3(cx{}, cy{}, cz{})\nVector3(ax{} {}, ay{} {}, az{} {})",
+		label.set_text(format!("Vector3(x{}, y{}, z{})\nVector3(cx{}, cy{}, cz{})\nVector3(ax{} {}, ay{} {}, az{} {})\n{}",
 			player.translation().x, player.translation().y, player.translation().z,
 			p_pos[0], p_pos[1], p_pos[2],
 			p_pos[0] + area,p_pos[0] - area,
 			p_pos[1] + area,p_pos[1] - area,
-			p_pos[2] + area,p_pos[2] - area
+			p_pos[2] + area,p_pos[2] - area,
+			more_text
 		));
 //		{
-
-		
-//		godot_print!("{}..{}",p_pos[0] + area,p_pos[0] - area);
 			for x in p_pos[0] - area..p_pos[0] + area{
 				for y in p_pos[1] - area..p_pos[1] + area{
 					for z in p_pos[2] - area..p_pos[2] + area{
@@ -147,10 +146,28 @@ impl VoxelTerrain {
 					}
 				}
 			}
-			for (key,value) in &self.chunks {
+			
+			for (key,value) in &mut self.chunks {
+				if value.get_should_remove() == true{// &&
+//					value.get_position()[0] < (p_pos[0] - area) as f32 &&
+//					value.get_position()[0] > (p_pos[0] + area) as f32 &&
+//					value.get_position()[1] < (p_pos[1] - area) as f32 &&
+//					value.get_position()[1] > (p_pos[1] + area) as f32 &&
+//					value.get_position()[2] < (p_pos[2] - area) as f32 &&
+//					value.get_position()[2] > (p_pos[2] + area) as f32{
+					more_text = format!("the chunk: 'chunk{}{}{}' has to be removed",
+						value.get_position()[0],
+						value.get_position()[1],
+						value.get_position()[2]);
+				}
+				
+//			}
+			
+			
+//			for (key,value) in &mut self.chunks {
 //				godot_print!("key is {} and the position of the chunk is Vector3({},{},{})", key, value.get_position()[0],value.get_position()[1],value.get_position()[2]);
-				self.get_chunk(key).set_should_remove(true);
-//				self.get_chunk().set_should_remove(true);
+//				self.get_chunk(owner,key.to_string()).unwrap().set_should_remove(true);
+				value.set_should_remove(true);
 				
 //				for x in p_pos[0] - area..p_pos[0] + area{
 //					for y in p_pos[1] - area..p_pos[1] + area{
@@ -163,6 +180,8 @@ impl VoxelTerrain {
 //				}
 				
 			}
+		
+//		godot_print!("{}..{}",p_pos[0] + area,p_pos[0] - area);
 //		}
 	}
 

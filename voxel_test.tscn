@@ -34,7 +34,7 @@ mesh = SubResource( 3 )
 material/0 = null
 
 [node name="KinematicBody" parent="." instance=ExtResource( 2 )]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 43.0152, 0 )
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 26.5878, 0 )
 
 [node name="Label" type="Label" parent="."]
 margin_left = 20.0
@@ -42,9 +42,10 @@ margin_top = 20.0
 margin_right = 263.0
 margin_bottom = 68.0
 rect_scale = Vector2( 1.5, 1.5 )
-text = "Vector3(x0, y43.0152, z0)
-Vector3(cx0, cy2, cz0)
-Vector3(ax4 -4, ay6 -2, az4 -4)"
+text = "Vector3(x0, y26.5878, z0)
+Vector3(cx0, cy1, cz0)
+Vector3(ax2 -2, ay3 -1, az2 -2)
+no chunk has to be removed"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -53,5 +54,6 @@ __meta__ = {
 
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
 shape = SubResource( 4 )
+disabled = true
 
 [node name="MeshInstance" type="MeshInstance" parent="StaticBody"]
