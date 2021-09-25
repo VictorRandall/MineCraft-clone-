@@ -24,10 +24,6 @@ config/name="Hypton"
 run/main_scene="res://voxel_test.tscn"
 config/icon="res://icon.png"
 
-[display]
-
-window/size/always_on_top=true
-
 [importer_defaults]
 
 texture={

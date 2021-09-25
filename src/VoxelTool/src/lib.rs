@@ -42,7 +42,7 @@ impl VoxelTerrain {
 		if self.chunks.contains_key(&format!("{},{},{}", x, y, z)){
 			return	;
 		}
-		godot_print!("generated chunk at {},{},{}", x, y, z);
+//		godot_print!("generated chunk at {},{},{}", x, y, z);
 		self.chunks.insert(
 			format!("{},{},{}", x, y, z),
 			VoxelChunk::new(Vector3::new(x as f32 * self.chunk_size as f32 - 1.0f32,y as f32 * self.chunk_size as f32 - 1.0f32,z as f32 * self.chunk_size as f32 - 1.0f32),
