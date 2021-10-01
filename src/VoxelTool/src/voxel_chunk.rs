@@ -109,7 +109,7 @@ impl VoxelChunk{
 		
 		let material = ResourceLoader::godot_singleton().load(
             GodotString::from_str("res://assets/new_spatialmaterial.tres"),
-            GodotString::from_str("Resource"), false).assume_safe().unwrap();
+            GodotString::from_str("Resource"), false).unwrap().assume_safe();
 
 		for x in 0..self.size as i32{
 			for y in 0..self.size as i32{
