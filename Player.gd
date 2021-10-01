@@ -63,7 +63,7 @@ func _process(delta: float) -> void:
 	else:
 		speed = w_speed
 	
-	if not $RayCast.is_colliding():
+	if not is_on_floor():
 		moviment.y -= -G * delta
 	else:
 		moviment.y = 0.0

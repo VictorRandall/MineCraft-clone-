@@ -107,9 +107,9 @@ impl VoxelChunk{
 		st.begin(Mesh::PRIMITIVE_TRIANGLES);
 //		st.begin(Mesh::PRIMITIVE_LINES);
 		
-//		let material = ResourceLoader::godot_singleton().load(
-//            GodotString::from_str("res://assets/new_spatialmaterial.tres"),
-//            GodotString::from_str("Resource"), false).unwrap();
+		let material = ResourceLoader::godot_singleton().load(
+            GodotString::from_str("res://assets/new_spatialmaterial.tres"),
+            GodotString::from_str("Resource"), false).unwrap();
 
 		for x in 0..self.size as i32{
 			for y in 0..self.size as i32{
@@ -123,7 +123,8 @@ impl VoxelChunk{
 			}
 		}
 		
-//		st.set_material(material);
+		st.set_material(material);
+//		st.set_material(material as SubClass<gdnative::prelude::Object, RefKind = true>);
 		st.generate_normals(false);
 		let mesh: Ref<ArrayMesh> = st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT).unwrap();
 		return Some(mesh);
