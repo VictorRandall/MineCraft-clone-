@@ -3,6 +3,7 @@
 [ext_resource path="res://Player.gd" type="Script" id=1]
 
 [sub_resource type="CylinderShape" id=1]
+radius = 0.75
 height = 4.0
 
 [sub_resource type="RayShape" id=2]
@@ -35,7 +36,6 @@ cast_to = Vector3( 0, -2, 0 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.63518, 0 )
-visible = false
 mesh = SubResource( 3 )
 material/0 = null
 
@@ -50,7 +50,6 @@ current = true
 far = 8192.0
 
 [node name="MeshInstance" type="MeshInstance" parent="Spatial"]
-visible = false
 mesh = SubResource( 4 )
 material/0 = null
 

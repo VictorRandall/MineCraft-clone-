@@ -1,6 +1,6 @@
 //use std;
 //use rand::Rng;
-use gdnative::api::{ArrayMesh, Mesh, MeshInstance, OpenSimplexNoise, SurfaceTool, Spatial, StaticBody};
+use gdnative::api::{ArrayMesh, Mesh, MeshInstance, OpenSimplexNoise, SurfaceTool, Spatial, StaticBody, Material};
 use gdnative::prelude::*;
 
 mod voxel;
@@ -80,7 +80,7 @@ impl VoxelChunk{
 								if noise.get_noise_3d(
 									x as f64 + self.pos.x as f64,
 									y as f64 + self.pos.y as f64,
-									z as f64 + self.pos.z as f64) < -0.25{
+									z as f64 + self.pos.z as f64) < -0.30{
 										self.data[x as usize][y as usize][z as usize] = 0u16;
 									}
 									
@@ -109,7 +109,7 @@ impl VoxelChunk{
 		
 		let material = ResourceLoader::godot_singleton().load(
             GodotString::from_str("res://assets/new_spatialmaterial.tres"),
-            GodotString::from_str("Resource"), false).unwrap().assume_safe();
+            GodotString::from_str("Resource"), false).unwrap().cast::<Material>().unwrap();//.assume_safe()
 
 		for x in 0..self.size as i32{
 			for y in 0..self.size as i32{
@@ -118,7 +118,7 @@ impl VoxelChunk{
 						&st, 
 						Vector3::new(x as f32,y as f32,z as f32),
 					);
-//					godot_print!("{},{},{}",x,y,z)
+//					godot_print!("{},{},{}",x,y,z);
 				}
 			}
 		}
@@ -177,91 +177,94 @@ impl VoxelChunk{
 		//botton
 		if self.get_voxel(offset_x,offset_y - 1.0f32, offset_z) == 0u16{
 //			godot_print!("botton t");
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
+//			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_uv(Vector2::new(0.0, 0.0));
+			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
+//			st.add_uv(Vector2::new(0.25, 0.0));
+			st.add_uv(Vector2::new(0.25, 0.25));
+			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
+//			st.add_uv(Vector2::new(0.0, 0.0));
+			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,0.0+offset_z));
 
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
+			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
+			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
+			st.add_uv(Vector2::new(0.0, 0.0));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 		}//else{godot_print!("botton f");}
 
-	//	left
+	//	right
 		if self.get_voxel(offset_x + 1.0f32, offset_y, offset_z) == 0u16{
 //			godot_print!("left t");
-			st.add_uv(Vector2::new(0.0, 0.25));
+			st.add_uv(Vector2::new(0.25, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
+			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.0, 0.0));
+			st.add_uv(Vector2::new(0.25, 0.0));
 			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
 
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
+			st.add_uv(Vector2::new(0.0, 0.0));
 			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.25));
+			st.add_uv(Vector2::new(0.25, 0.0));
 			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
 		}//else{godot_print!("left f");}
 
-	//	right
+	//	left
 		if self.get_voxel(offset_x - 1.0f32, offset_y, offset_z) == 0u16{
 //			godot_print!("right t");
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.0, 0.0));
+			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
+			st.add_uv(Vector2::new(0.25, 0.25));
+			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
+			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,0.0+offset_z));
 
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
+			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
+			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
+			st.add_uv(Vector2::new(0.0, 0.0));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
 		}//else{godot_print!("right f");}
 		
-	//	front
+	//	back
 		if self.get_voxel(offset_x, offset_y, offset_z + 1.0f32) == 0u16{
 //			godot_print!("front t");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
-			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.0, 0.0));
-			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
-
-			st.add_uv(Vector2::new(0.0, 0.25));
-			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.0));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.25));
+			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
+
+			st.add_uv(Vector2::new(0.25, 0.25));
+			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,1.0+offset_z));
+			st.add_uv(Vector2::new(0.0, 0.0));
+			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
+			st.add_uv(Vector2::new(0.25, 0.0));
 			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,1.0+offset_z));
 		}//else{godot_print!("front f");}
 
-	//	back
+	//	front
 		if self.get_voxel(offset_x, offset_y, offset_z - 1.0f32) == 0u16{
 //			godot_print!("back t");
 			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
-			st.add_uv(Vector2::new(0.0, 0.0));
+			st.add_uv(Vector2::new(0.25, 0.25));
 			st.add_vertex(Vector3::new(0.0+offset_x,0.0+offset_y,0.0+offset_z));
 			
-			st.add_uv(Vector2::new(0.0, 0.25));
+			st.add_uv(Vector2::new(0.0, 0.0));
 			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
 			st.add_uv(Vector2::new(0.25, 0.0));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
-			st.add_uv(Vector2::new(0.25, 0.25));
+			st.add_uv(Vector2::new(0.0, 0.25));
 			st.add_vertex(Vector3::new(1.0+offset_x,0.0+offset_y,0.0+offset_z));
 		}//else{godot_print!("back f");}
 	}
-}
+}	
