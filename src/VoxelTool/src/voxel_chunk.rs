@@ -70,11 +70,11 @@ impl VoxelChunk{
 					for y in 0..self.size as i32{
 						for z in 0..self.size as i32{
 							if 
-								noise.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64)
+//								noise.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64)
 //								*
+								noise.get_noise_3d(x as f64 + self.pos.x as f64, y as f64 + self.pos.y as f64, z as f64 + self.pos.z as f64)
 //								noise.get_noise_3d(x as f64 + self.pos.x as f64, y as f64 + self.pos.y as f64, z as f64 + self.pos.z as f64)
-//								noise.get_noise_3d(x as f64 + self.pos.x as f64, y as f64 + self.pos.y as f64, z as f64 + self.pos.z as f64)
-								*30f64+20f64 > y as f64 + self.pos.y as f64{//+noise2.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64)
+								*50f64+50f64 > y as f64 + self.pos.y as f64{//+noise2.get_noise_2d(x as f64 + self.pos.x as f64, z as f64 + self.pos.z as f64)
 								self.data[x as usize][y as usize][z as usize] = 1u16;
 								
 								if noise.get_noise_3d(
@@ -117,6 +117,7 @@ impl VoxelChunk{
 					&self.custom_voxel(
 						&st, 
 						Vector3::new(x as f32,y as f32,z as f32),
+						vec![4u8,4u8],
 					);
 //					godot_print!("{},{},{}",x,y,z);
 				}
@@ -138,14 +139,14 @@ impl VoxelChunk{
 		};
 	}
 
-	fn custom_voxel(&self,st:&Ref<SurfaceTool, Unique>, pos:Vector3){
+	fn custom_voxel(&self,st:&Ref<SurfaceTool, Unique>, pos:Vector3,size:Vec<u8>){
 		
 		let offset_x:f32 = pos.x;
 		let offset_y:f32 = pos.y;
 		let offset_z:f32 = pos.z;
 
-		let offset_uv_x:f32 = 0.0;
-		let offset_uv_y:f32 = 0.0;
+		let offset_uv_x:f32 = size[0] as f32;
+		let offset_uv_y:f32 = size[1] as f32;
 
 		if self.get_voxel(offset_x,offset_y, offset_z) == 0u16{
 //			godot_print!("the id is 0");

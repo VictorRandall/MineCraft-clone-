@@ -40,7 +40,7 @@ impl VoxelTerrain {
 //	#[export]
 	fn add_chunk(&mut self,owner: &Spatial,x:i32, y:i32, z:i32){
 		if self.chunks.contains_key(&format!("{},{},{}", x, y, z)){
-			return	;
+			return;
 		}
 //		godot_print!("generated chunk at {},{},{}", x, y, z);
 		self.chunks.insert(
@@ -59,9 +59,9 @@ impl VoxelTerrain {
 
 	fn remove_chunk(&mut self, owner: &Spatial,x:i32, y:i32, z:i32){
 		let chunk = self.get_chunk(owner,format!("{},{},{}", x, y, z)).expect("this chunk doesnt exist");
-		chunk.remove_chunk_node(owner)
+		chunk.remove_chunk_node(owner);
 		
-		
+		self.chunks.remove(&format!("{},{},{}", x, y, z));
 	}
 
 	#[export]
@@ -154,9 +154,10 @@ impl VoxelTerrain {
 				}
 			}
 			
-			for (key, value) in self.chunks.iter_mut() {
-				godot_print!("{}",value.get_should_remove());
-				if value.get_should_remove() == true{// &&
+//			for (key, value) in self.chunks.iter_mut() {
+//			for key in 0..self.chunks.len() as i32{
+//				if value.get_should_remove() == true{// &&
+//					godot_print!("{}",value.get_should_remove());
 //					godot_print!("the chunk: 'chunk {} {} {}' can be removed",
 //						value.get_position()[0],
 //						value.get_position()[1],
@@ -172,9 +173,10 @@ impl VoxelTerrain {
 //						value.get_position()[1],
 //						value.get_position()[2]);
 					
-					self.remove_chunk(&owner, value.get_position()[0] as i32, value.get_position()[1] as i32, value.get_position()[2] as i32);
-				}
-			}
+//					key.remove_chunk(&owner, value.get_position()[0] as i32, value.get_position()[1] as i32, value.get_position()[2] as i32);
+//					self.chunks.remove(key);
+//				}
+//			}
 				
 			
 			
