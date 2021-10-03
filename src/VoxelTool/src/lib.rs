@@ -25,19 +25,17 @@ impl VoxelTerrain {
 			chunks: std::collections::HashMap::new(),
 			seed: rand::thread_rng().gen(),
 			//seed2: rand::thread_rng().gen(),
-			chunk_size: 16i32,
+			chunk_size: 5i32,
 //			material:mtrl
 		}
 	}
 
 	//FIXME: this function doesnt return the real voxel data
-	#[export]
-	fn get_voxel(&self, owner: &Spatial, x:i32, y:i32, z:i32) -> u32{
-		return 1u32
-	}
-
-//      TODO: make a hashmap (dictionary but in rust) to store the chunks instead of a vec (array but in rust)
 //	#[export]
+//	fn get_voxel(&self, owner: &Spatial, x:i32, y:i32, z:i32) -> i16{
+//		return 1i16
+//	}
+//
 	fn add_chunk(&mut self,owner: &Spatial,x:i32, y:i32, z:i32){
 		if self.chunks.contains_key(&format!("{},{},{}", x, y, z)){
 			return;
@@ -52,11 +50,13 @@ impl VoxelTerrain {
 		self.chunks.get_mut(&format!("{},{},{}", x, y, z)).unwrap().generate(&owner);
 	}
 
+
 	fn get_chunk(&mut self, owner: &Spatial, key:String) -> Option<&mut VoxelChunk>{//x:i32, y:i32, z:i32
 //		return self.chunks.get_mut(&format!("{},{},{}", x, y, z));
 		return self.chunks.get_mut(&key);
 	}
 
+	#[export]
 	fn remove_chunk(&mut self, owner: &Spatial,x:i32, y:i32, z:i32){
 		let chunk = self.get_chunk(owner,format!("{},{},{}", x, y, z)).expect("this chunk doesnt exist");
 		chunk.remove_chunk_node(owner);
@@ -154,6 +154,12 @@ impl VoxelTerrain {
 				}
 			}
 			
+			for (key, mut value) in self.chunks.iter_mut() {
+//				godot_print!("{} / {}", key, value);
+//				self.chunks.remove(&key);
+				value.remove_chunk_node(owner);
+			}
+//			
 //			for (key, value) in self.chunks.iter_mut() {
 //			for key in 0..self.chunks.len() as i32{
 //				if value.get_should_remove() == true{// &&

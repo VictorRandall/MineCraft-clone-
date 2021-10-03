@@ -13,6 +13,13 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-#	for x in range($Position3D.):
-		
-			$GridMap.set_cell_item()
+	rotation.x += 0.5 * delta
+	print(rotation)
+#	print(get_node("../Spatial").get_voxel(1,1,1))
+	
+	if Input.is_action_just_pressed("adad"):
+		print("a")
+		if Engine.time_scale == 0.25:
+			Engine.time_scale = 1.0
+		else:
+			Engine.time_scale = 0.25

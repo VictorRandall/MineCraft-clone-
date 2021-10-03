@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://src/new_script.gdns" type="Script" id=1]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/sun.gd" type="Script" id=3]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 5.0
@@ -60,3 +61,9 @@ shape = SubResource( 4 )
 disabled = true
 
 [node name="MeshInstance" type="MeshInstance" parent="StaticBody"]
+
+[node name="Spatial2" type="Spatial" parent="."]
+script = ExtResource( 3 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="Spatial2"]
+shadow_enabled = true
