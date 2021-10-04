@@ -148,15 +148,15 @@ impl VoxelChunk{
 
 	fn custom_voxel(&self,st:&Ref<SurfaceTool, Unique>, pos:Vector3,size:Vec<u8>,offset:Vector2){
 		
-//		let offset_x:f32 = pos.x;
-//		let offset_y:f32 = pos.y;
-//		let offset_z:f32 = pos.z;
+		let offset_x:f32 = pos.x;
+		let offset_y:f32 = pos.y;
+		let offset_z:f32 = pos.z;
 
 		let uv_x:f32 = size[0] as f32;
 		let uv_y:f32 = size[1] as f32;
 		
-		let offset_x:f32 = offset.x;
-		let offset_y:f32 = offset.y;
+		let OS_uv_x:f32 = offset.x;
+		let OS_uv_y:f32 = offset.y;
 
 		if self.get_voxel(offset_x,offset_y, offset_z) == 0u16{
 //			godot_print!("the id is 0");
@@ -170,11 +170,11 @@ impl VoxelChunk{
 //		godot_print!("pos = Vector3({},{},{})",offset_x as usize,(offset_y + 1.0f32) as usize,offset_z as usize);
 		if self.get_voxel(offset_x,offset_y + 1.0f32, offset_z) == 0u16{
 //			godot_print!("top t");
-			st.add_uv(Vector2::new(0.0 + offset_x, 0.0 + offset_y));
-			st.add_vertex(Vector3::new(0.0,1.0,0.0));
-			st.add_uv(Vector2::new(1.0 + offset_x * uv_x, 0.0 + offset_y));
-			st.add_vertex(Vector3::new(1.0,1.0,0.0));
-			st.add_uv(Vector2::new(0.0, 1.0 * uv_x));
+			st.add_uv(Vector2::new((0.0 + OS_uv_x) / uv_x, (0.0 + OS_uv_y) / uv_x));
+			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,0.0+offset_z));
+			st.add_uv(Vector2::new((1.0 + OS_uv_x) / uv_x, (0.0 + OS_uv_y) / uv_y));
+			st.add_vertex(Vector3::new(1.0+offset_x,1.0+offset_y,0.0+offset_z));
+			st.add_uv(Vector2::new((0.0 + OS_uv_x) / uv_x, (1.0 + OS_uv_y) / uv_y));
 			st.add_vertex(Vector3::new(0.0+offset_x,1.0+offset_y,1.0+offset_z));
 
 			st.add_uv(Vector2::new(0.0, 1.0 * uv_x));

@@ -13,9 +13,11 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	rotation.x += 0.5 * delta
-	print(rotation)
-#	print(get_node("../Spatial").get_voxel(1,1,1))
+	rotation_degrees.x += 10 * delta
+	if rotation_degrees.x > 270:
+		rotation_degrees.x = 0
+	print(rotation_degrees)
+	print(get_node("../VoxelSistem").get_voxel())
 	
 	if Input.is_action_just_pressed("adad"):
 		print("a")
