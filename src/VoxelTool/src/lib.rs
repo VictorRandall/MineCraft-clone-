@@ -31,10 +31,10 @@ impl VoxelTerrain {
 	}
 
 	//FIXME: this function doesnt return the real voxel data
-	#[export]
-	fn get_voxel(&self, owner: &Spatial, x:i32, y:i32, z:i32) -> u32{
-		return 1u32
-	}
+//	#[export]
+//	fn get_voxel(&self, owner: &Spatial, x:i32, y:i32, z:i32) -> u32{
+//		return 1u32
+//	}
 
 //      TODO: make a hashmap (dictionary but in rust) to store the chunks instead of a vec (array but in rust)
 //	#[export]
