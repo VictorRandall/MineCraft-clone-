@@ -42,9 +42,8 @@ margin_right = 263.0
 margin_bottom = 68.0
 rect_scale = Vector2( 1.5, 1.5 )
 text = "Vector3(x0, y100, z0)
-Vector3(cx0, cy6, cz0)
-Vector3(ax2 -2, ay8 4, az2 -2)
-no chunk has to be removed"
+Vector3(cx0, cy12, cz0)
+Vector3(ax2 -2, ay14 10, az2 -2)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
