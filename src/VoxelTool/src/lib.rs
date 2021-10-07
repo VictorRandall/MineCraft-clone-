@@ -25,11 +25,14 @@ impl VoxelTerrain {
 			chunks: std::collections::HashMap::new(),
 			seed: rand::thread_rng().gen(),
 			//seed2: rand::thread_rng().gen(),
-			chunk_size: 5i32,
+			chunk_size: 8i32,
 //			material:mtrl
 		}
 	}
 
+	fn set_voxel(c_pos:Vector3,x:i32,y:i32,z:i32){
+		//TODO: it should get the chunk, change the chunk data and then regenerate the mesh of the chunk
+	}
 
 	fn add_chunk(&mut self,owner: &Spatial,x:i32, y:i32, z:i32){
 		if self.chunks.contains_key(&format!("{},{},{}", x, y, z)){
