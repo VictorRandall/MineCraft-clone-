@@ -30,12 +30,7 @@ impl VoxelTerrain {
 		}
 	}
 
-	//FIXME: this function doesnt return the real voxel data
-//	#[export]
-//	fn get_voxel(&self, owner: &Spatial, x:i32, y:i32, z:i32) -> i16{
-//		return 1i16
-//	}
-//
+
 	fn add_chunk(&mut self,owner: &Spatial,x:i32, y:i32, z:i32){
 		if self.chunks.contains_key(&format!("{},{},{}", x, y, z)){
 			return;
