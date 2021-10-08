@@ -32,7 +32,7 @@ impl VoxelTerrain {
 
 	#[export]
 	fn set_voxel(&mut self, owner: &Spatial,x:i32,y:i32,z:i32){
-		//TODO: it should get the chunk (by dividing the position with chunk_size, then get the result to get the chunk), change the chunk data and then regenerate the mesh of the chunk
+		//TODO: pos.floor() / self.chunk_size is the chunk    pos.floor() % self.chunk_size is the block position
 		{
 //			godot_print!("x / {} = {}", self.chunk_size, x / self.chunk_size);
 			let chunk = self.chunks.get_mut(&format!("{},{},{}", x / self.chunk_size, y / self.chunk_size, z / self.chunk_size)).unwrap();
