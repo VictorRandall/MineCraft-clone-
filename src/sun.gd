@@ -16,8 +16,9 @@ func _process(delta: float) -> void:
 	rotation_degrees.x += 10 * delta
 	if rotation_degrees.x > 270:
 		rotation_degrees.x = 0
-	print(rotation_degrees)
+#	print(rotation_degrees)
 #	print(get_node("../VoxelSistem")"res://assets/new_spatialmaterial.tres"
+	
 	get_node("../VoxelSistem").set_voxel(8,1,1)
 	
 	if Input.is_action_just_pressed("adad"):

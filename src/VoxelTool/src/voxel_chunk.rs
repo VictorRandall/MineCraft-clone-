@@ -99,7 +99,7 @@ impl VoxelChunk{
 //				godot_print!("{:#?}", self.data);
 				meshinst.set_mesh(self.generate_mesh().expect("onosecond"));
 				meshinst.set_translation(self.pos);
-				meshinst.set_name(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z));
+				meshinst.set_name(format!("chunk {} {} {}",self.pos.x,self.pos.y,self.pos.z));
 				meshinst.create_trimesh_collision();
 				owner.add_child(meshinst,true);
 //				self.update = false;
@@ -107,7 +107,7 @@ impl VoxelChunk{
 //		}
 	}
 
-	fn generate_mesh(&self) -> Option<gdnative::Ref<ArrayMesh>>{
+	pub fn generate_mesh(&self) -> Option<gdnative::Ref<ArrayMesh>>{
 		let st = SurfaceTool::new();
 
 		st.begin(Mesh::PRIMITIVE_TRIANGLES);
@@ -139,10 +139,10 @@ impl VoxelChunk{
 	}
 
 	pub fn remove_chunk_node(&mut self, owner: &Spatial){
-		godot_print!("deleted node: 'chunk{}{}{}'",self.pos.x,self.pos.y,self.pos.z);
+		godot_print!("deleted node: 'chunk {} {} {}'",self.pos.x,self.pos.y,self.pos.z);
 		self.data.clear();
 		unsafe {
-			owner.get_node(format!("chunk{}{}{}",self.pos.x,self.pos.y,self.pos.z)).unwrap().assume_safe().cast::<MeshInstance>().unwrap().queue_free();
+			owner.get_node(format!("chunk {} {} {}",self.pos.x,self.pos.y,self.pos.z)).unwrap().assume_safe().cast::<MeshInstance>().unwrap().queue_free();
 		};
 	}
 

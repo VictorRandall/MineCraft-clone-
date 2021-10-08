@@ -1,6 +1,6 @@
 use std;
 use rand::Rng;
-use gdnative::api::{Spatial};
+use gdnative::api::{Spatial,MeshInstance};
 use gdnative::prelude::*;
 
 mod voxel_chunk;
@@ -34,10 +34,21 @@ impl VoxelTerrain {
 	fn set_voxel(&mut self, owner: &Spatial,x:i32,y:i32,z:i32){
 		//TODO: it should get the chunk (by dividing the position with chunk_size, then get the result to get the chunk), change the chunk data and then regenerate the mesh of the chunk
 		{
-			godot_print!("x / {} = {}", self.chunk_size, x / self.chunk_size);
+//			godot_print!("x / {} = {}", self.chunk_size, x / self.chunk_size);
 			let chunk = self.chunks.get_mut(&format!("{},{},{}", x / self.chunk_size, y / self.chunk_size, z / self.chunk_size)).unwrap();
+//			let node = unsafe {
+//						owner.get_node(format!("chunk {} {} {}", x / self.chunk_size, y / self.chunk_size, z / self.chunk_size))
+//							.unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(chunk.generate_mesh().unwrap());
+//					};
 			
 			godot_print!("{:?}",chunk.get_position());
+			godot_print!("{} {} {} ", x as f32 - (x / self.chunk_size) as f32,y as f32 - (y / self.chunk_size) as f32,z as f32 - (z / self.chunk_size) as f32);
+			chunk.set_voxel(x as f32 - (x / self.chunk_size) as f32,y as f32 - (y / self.chunk_size) as f32,z as f32 - (z / self.chunk_size) as f32,1u16);
+			unsafe {
+						owner.get_node(format!("chunk {} {} {}", x / self.chunk_size, y / self.chunk_size, z / self.chunk_size))
+							.unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(chunk.generate_mesh().unwrap());
+					};
+//			node.set_mesh(chunk.generate_mesh());
 		}
 	}
 
@@ -69,18 +80,18 @@ impl VoxelTerrain {
 		self.chunks.remove(&format!("{},{},{}", x, y, z));
 	}
 
-	#[export]
-	fn _ready(&mut self, owner: &Spatial) {
-		let player = unsafe {
-			owner.get_node("../KinematicBody").unwrap().assume_safe().cast::<KinematicBody>().unwrap()
-		};
-		
-		let p_pos: Vec<i32> = vec![
-		(player.translation().x / self.chunk_size as f32) as i32,
-		(player.translation().y / self.chunk_size as f32) as i32,
-		(player.translation().z / self.chunk_size as f32) as i32];
-		
-		godot_print!("{:?}",self.chunks);
+//	#[export]
+//	fn _ready(&mut self, owner: &Spatial) {
+//		let player = unsafe {
+//			owner.get_node("../KinematicBody").unwrap().assume_safe().cast::<KinematicBody>().unwrap()
+//		};
+//		
+//		let p_pos: Vec<i32> = vec![
+//		(player.translation().x / self.chunk_size as f32) as i32,
+//		(player.translation().y / self.chunk_size as f32) as i32,
+//		(player.translation().z / self.chunk_size as f32) as i32];
+//		
+//		godot_print!("{:?}",self.chunks);
 //		for x in 30-(p_pos[0]*10)..30+(p_pos[0]*10){
 //			for y in 30-(p_pos[0]*10)..30+(p_pos[0]*10){
 //				for z in 30-(p_pos[0]*10)..30+(p_pos[0]*10){
@@ -114,7 +125,7 @@ impl VoxelTerrain {
 //			;
 //			self.chunks[i].restart(&owner);
 //		}
-	}
+//	}
 	#[export]
 	fn _process(&mut self, owner: &Spatial, _delta: f64){
 		let player = unsafe {
@@ -135,9 +146,9 @@ impl VoxelTerrain {
 		label.set_text(format!("Vector3(x{}, y{}, z{})\nVector3(cx{}, cy{}, cz{})\nVector3(ax{} {}, ay{} {}, az{} {})",
 			player.translation().x, player.translation().y, player.translation().z,
 			p_pos[0], p_pos[1], p_pos[2],
-			p_pos[0] + area,p_pos[0] - area,
-			p_pos[1] + area,p_pos[1] - area,
-			p_pos[2] + area,p_pos[2] - area
+			p_pos[0] - area,p_pos[0] + area,
+			p_pos[1] - area,p_pos[1] + area,
+			p_pos[2] - area,p_pos[2] + area
 //			more_text
 		));
 //		{
@@ -150,7 +161,6 @@ impl VoxelTerrain {
 			for x in p_pos[0] - area..p_pos[0] + area{
 				for y in p_pos[1] - area..p_pos[1] + area{
 					for z in p_pos[2] - area..p_pos[2] + area{
-//						godot_print!("i have aids");
 						self.add_chunk(owner,x,y,z);
 //						self.get_chunk(owner,x,y,z).unwrap().set_should_remove(false);
 						self.get_chunk(owner,format!("{},{},{}",x,y,z)).unwrap().set_should_remove(false);
@@ -159,15 +169,21 @@ impl VoxelTerrain {
 				}
 			}
 			
-			for (key, mut value) in self.chunks.iter_mut() {
-//				godot_print!("{} / {}", key, value);
+			for (key, mut value) in &mut self.chunks {
+//				godot_print!("chunk {} {} {} should not remove",value.get_position()[0],value.get_position()[1],value.get_position()[2]);
 //				self.chunks.remove(&key);
-				value.remove_chunk_node(owner);
+				if value.get_should_remove() == true{// &&
+//					value.remove_chunk_node(owner);
+					unsafe {
+						owner.get_node(format!("chunk {} {} {}",value.get_position()[0],value.get_position()[1],value.get_position()[2]))
+							.unwrap().assume_safe().cast::<MeshInstance>().unwrap().queue_free();
+					};
+//					godot_print!("chunk {} {} {} should remove",value.get_position()[0],value.get_position()[1],value.get_position()[2]);
+				}
 			}
 //			
 //			for (key, value) in self.chunks.iter_mut() {
 //			for key in 0..self.chunks.len() as i32{
-//				if value.get_should_remove() == true{// &&
 //					godot_print!("{}",value.get_should_remove());
 //					godot_print!("the chunk: 'chunk {} {} {}' can be removed",
 //						value.get_position()[0],

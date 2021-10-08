@@ -42,10 +42,13 @@ func _process(delta: float) -> void:
 #		block_outline.translation = bpos
 #		block_outline.visible = true
 		
-#		if Input.is_action_just_pressed("Break"):
-#			emit_signal("break_block", pos);
-#		if Input.is_action_just_pressed("Place"):
-#			emit_signal("place_block", pos + norm, Global.STONE);
+		if Input.is_action_pressed("gp_break"):
+			get_node("../VoxelSistem").set_voxel(int(bpos.x),int(bpos.y),int(bpos.z));
+#			print(str(int(bpos.x)) + str(int(bpos.y)) + str(int(bpos.z)))
+		
+		if Input.is_action_just_pressed("gp_place"):
+			get_node("../VoxelSistem").set_voxel(int(bpos.x),int(bpos.y),int(bpos.z))
+#			print(str(int(bpos.x)) + str(int(bpos.y)) + str(int(bpos.z)))
 	
 #	print();
 	if Input.is_action_pressed("gp_up"):

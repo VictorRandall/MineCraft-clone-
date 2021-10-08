@@ -55,4 +55,5 @@ mesh = SubResource( 4 )
 material/0 = null
 
 [node name="RayCast" type="RayCast" parent="Spatial"]
+enabled = true
 cast_to = Vector3( 0, 0, -10 )
