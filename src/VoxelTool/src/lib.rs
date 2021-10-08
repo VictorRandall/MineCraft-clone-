@@ -135,7 +135,7 @@ impl VoxelTerrain {
 			owner.get_node("../Label").unwrap().assume_safe().cast::<Label>().unwrap()
 		};
 //		let player_old_pos: Vec<i32;3usize> = player.translation();
-		let area:i32 = 2i32;
+		let area:i32 = 1i32;
 //		let mut more_text:String = "no chunk has to be removed".to_string();
 		
 		let p_pos: Vec<i32> = vec![
