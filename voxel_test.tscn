@@ -1,6 +1,5 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://src/new_script.gdns" type="Script" id=1]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/sun.gd" type="Script" id=3]
 
@@ -33,7 +32,7 @@ mesh = SubResource( 3 )
 material/0 = null
 
 [node name="KinematicBody" parent="." instance=ExtResource( 2 )]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 66.4902, 0 )
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 70, 0 )
 
 [node name="Label" type="Label" parent="."]
 margin_left = 20.0
@@ -41,7 +40,7 @@ margin_top = 20.0
 margin_right = 263.0
 margin_bottom = 68.0
 rect_scale = Vector2( 1.5, 1.5 )
-text = "Vector3(x0, y66.49017, z0)
+text = "Vector3(x0, y70, z0)
 Vector3(cx0, cy8, cz0)
 Vector3(ax-1 1, ay7 9, az-1 1)"
 __meta__ = {
@@ -63,4 +62,3 @@ script = ExtResource( 3 )
 shadow_enabled = true
 
 [node name="VoxelSistem" type="Spatial" parent="."]
-script = ExtResource( 1 )

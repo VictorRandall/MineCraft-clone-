@@ -1,7 +1,7 @@
 [gd_resource type="NativeScript" load_steps=2 format=2]
 
 [sub_resource type="GDNativeLibrary" id=1]
-entry/X11.64 = "res://src/gdtest/target/debug/libgdtest.so"
+entry/X11.64 = "res://src/VoxelTerrain/target/debug/libvoxel_terrain.so"
 dependency/X11.64 = [  ]
 
 [resource]

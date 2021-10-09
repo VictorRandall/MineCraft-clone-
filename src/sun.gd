@@ -21,7 +21,7 @@ func _process(delta: float) -> void:
 	
 	
 	
-	get_node("../VoxelSistem").set_voxel(get_node("../KinematicBody").translation.x,get_node("../KinematicBody").translation.y,get_node("../KinematicBody").translation.z)
+#	get_node("../VoxelSistem").set_voxel(get_node("../KinematicBody").translation.x,get_node("../KinematicBody").translation.y,get_node("../KinematicBody").translation.z)
 	
 	if Input.is_action_just_pressed("adad"):
 		print("a")
