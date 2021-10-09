@@ -43,11 +43,11 @@ func _process(delta: float) -> void:
 #		block_outline.visible = true
 		
 		if Input.is_action_pressed("gp_break"):
-			get_node("../VoxelSistem").set_voxel(int(bpos.x),int(bpos.y),int(bpos.z));
+			get_node("../VoxelSistem").set_voxel(bpos.x,bpos.y,bpos.z)
 #			print(str(int(bpos.x)) + str(int(bpos.y)) + str(int(bpos.z)))
 		
 		if Input.is_action_just_pressed("gp_place"):
-			get_node("../VoxelSistem").set_voxel(int(bpos.x),int(bpos.y),int(bpos.z))
+			get_node("../VoxelSistem").set_voxel(bpos.x,bpos.y,bpos.z)
 #			print(str(int(bpos.x)) + str(int(bpos.y)) + str(int(bpos.z)))
 	
 #	print();

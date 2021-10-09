@@ -18,7 +18,7 @@ extents = Vector3( 200, 0.5, 200 )
 [node name="Spatial" type="Spatial"]
 
 [node name="RigidBody" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 13.9917, 36.8324, 11.6282 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.17945, 63.4737, -1.36118 )
 physics_material_override = SubResource( 1 )
 continuous_cd = true
 __meta__ = {
@@ -33,7 +33,7 @@ mesh = SubResource( 3 )
 material/0 = null
 
 [node name="KinematicBody" parent="." instance=ExtResource( 2 )]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 66.4578, 0 )
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 66.4902, 0 )
 
 [node name="Label" type="Label" parent="."]
 margin_left = 20.0
@@ -41,9 +41,9 @@ margin_top = 20.0
 margin_right = 263.0
 margin_bottom = 68.0
 rect_scale = Vector2( 1.5, 1.5 )
-text = "Vector3(x0, y66.4578, z0)
+text = "Vector3(x0, y66.49017, z0)
 Vector3(cx0, cy8, cz0)
-Vector3(ax-2 2, ay6 10, az-2 2)"
+Vector3(ax-1 1, ay7 9, az-1 1)"
 __meta__ = {
 "_edit_use_anchors_": false
 }

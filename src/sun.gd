@@ -19,7 +19,9 @@ func _process(delta: float) -> void:
 #	print(rotation_degrees)
 #	print(get_node("../VoxelSistem")"res://assets/new_spatialmaterial.tres"
 	
-	get_node("../VoxelSistem").set_voxel(8,1,1)
+	
+	
+	get_node("../VoxelSistem").set_voxel(get_node("../KinematicBody").translation.x,get_node("../KinematicBody").translation.y,get_node("../KinematicBody").translation.z)
 	
 	if Input.is_action_just_pressed("adad"):
 		print("a")
