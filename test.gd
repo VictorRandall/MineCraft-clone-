@@ -8,7 +8,7 @@ extends Node
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	get_parent().set_voxel(Vector3(0.0,0.0,0.0)) # Replace with function body.
+	get_parent().set_voxel(Vector3(16.0,0.0,0.0)) # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
