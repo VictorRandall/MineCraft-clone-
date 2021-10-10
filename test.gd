@@ -1,4 +1,4 @@
-extends Spatial
+extends Node
 
 
 # Declare member variables here. Examples:
@@ -8,11 +8,11 @@ extends Spatial
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	get_parent().set_voxel(Vector3(0.0,0.0,0.0)) # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 #	for x in range($Position3D.):
-		
-			$GridMap.set_cell_item()
+		pass
+#			$GridMap.set_cell_item()

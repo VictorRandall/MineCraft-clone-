@@ -83,12 +83,12 @@ impl VoxelChunk{
 									self.set_voxel(x as f32,y as f32,z as f32, 1u16);
 							}
 								
-								if noise.get_noise_3d(
-									x as f64 + self.pos.x as f64,
-									y as f64 + self.pos.y as f64,
-									z as f64 + self.pos.z as f64) < -0.25{
-										self.data[x as usize][y as usize][z as usize] = 0u16;
-										self.set_voxel(x as f32,y as f32 - 10.0f32,z as f32, 0u16);
+							if noise.get_noise_3d(
+								x as f64 + self.pos.x as f64,
+								y as f64 + self.pos.y as f64,
+								z as f64 + self.pos.z as f64) < -0.25{
+									self.data[x as usize][y as usize][z as usize] = 0u16;
+								self.set_voxel(x as f32,y as f32 - 10.0f32,z as f32, 0u16);
 									
 							}//else{
 //								self.data[x as usize ][y as usize][z as usize] = 0u16;

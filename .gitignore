@@ -6,6 +6,7 @@ export_presets.cfg
 
 # rust files
 src/VoxelTool/target/
+src/VoxelTerrain/target/
 
 
 # Mono-specific ignores
