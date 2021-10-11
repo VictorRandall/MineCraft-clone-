@@ -46,6 +46,7 @@ __meta__ = {
 }
 
 [node name="Camera" type="Camera" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.216098 )
 current = true
 far = 8192.0
 

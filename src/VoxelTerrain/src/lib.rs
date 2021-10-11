@@ -25,7 +25,7 @@ pub struct HelloWorld{
 impl HelloWorld {
     fn new(_owner: &Spatial) -> Self {
         HelloWorld{
-        	chunks_data: vec![vec![vec![1u16;16usize];16usize];16usize],
+        	chunks_data: vec![vec![vec![0u16;16usize];16usize];16usize],
         	chunk_size: 16u8
         }
     }
@@ -42,7 +42,7 @@ impl HelloWorld {
         	for y in 0..self.chunk_size{
         		for z in 0..self.chunk_size{
         			if noise.get_noise_2d(x as f64, z as f64) > y as f64{
-        				self.chunks_data[x as usize][y as usize][z as usize] = 0u16;
+        				self.chunks_data[x as usize][y as usize][z as usize] = 1u16;
 //        				self.chunks_data[x as usize][(y - 1u8) as usize][z as usize] = 2u16;
         			}
         		}

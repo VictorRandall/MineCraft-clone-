@@ -1,4 +1,4 @@
-extends StaticBody
+extends Spatial
 
 const chunk_size = 16
 const chunk_amount = 15
@@ -59,7 +59,7 @@ func get_chunk(x, z):
 
 func _process(delta):
 #	update_chunks()
-	var player_translation = $Position3D.translation
+	var player_translation = get_node("../KinematicBody").translation
 	var p_x = int(player_translation.x) / chunk_size
 	var p_y = int(player_translation.y) / chunk_size
 	var p_z = int(player_translation.z) / chunk_size

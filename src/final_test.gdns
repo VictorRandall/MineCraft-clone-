@@ -1,0 +1,9 @@
+[gd_resource type="NativeScript" load_steps=2 format=2]
+
+[sub_resource type="GDNativeLibrary" id=1]
+entry/X11.64 = "res://src/voxel_idk_anymore/target/release/libvoxel_idk_anymore.so"
+dependency/X11.64 = [  ]
+
+[resource]
+class_name = "VoxelWorld"
+library = SubResource( 1 )

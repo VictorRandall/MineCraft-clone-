@@ -3,7 +3,7 @@ extends KinematicBody
 var moviment: Vector3 = Vector3();
 var speed: float
 var w_speed: float = 12.0
-var r_speed: float = 24.0
+var r_speed: float = 34.0
 var G: float = -10.0;
 var cam_mov: float = 0.2;
 
@@ -43,11 +43,11 @@ func _process(delta: float) -> void:
 #		block_outline.visible = true
 		
 		if Input.is_action_pressed("gp_break"):
-			get_node("../VoxelSistem").set_voxel(bpos.x,bpos.y,bpos.z)
+			get_node("..").set_voxel(Vector3(bpos.x,bpos.y,bpos.z))
 #			print(str(int(bpos.x)) + str(int(bpos.y)) + str(int(bpos.z)))
 		
 		if Input.is_action_just_pressed("gp_place"):
-			get_node("../VoxelSistem").set_voxel(bpos.x,bpos.y,bpos.z)
+			get_node("..").set_voxel(Vector3(bpos.x,bpos.y,bpos.z))
 #			print(str(int(bpos.x)) + str(int(bpos.y)) + str(int(bpos.z)))
 	
 #	print();
@@ -68,6 +68,7 @@ func _process(delta: float) -> void:
 	
 	if not is_on_floor():
 		moviment.y -= -G * delta
+#		pass
 	else:
 		moviment.y = 0.0
 		if Input.is_action_pressed("gp_jump"):
