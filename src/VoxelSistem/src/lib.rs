@@ -35,17 +35,17 @@ impl VoxelSistem {
 	}
 	
 	fn build_chunk(&mut self, pos: Vector3){
-		if self.chunks.contains_key(&ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}){
-			return;
+		if !self.chunks.contains_key(&ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}){
+			self.chunks.insert(
+				ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}, 
+				VoxelChunk{
+					data: vec![vec![vec![0u16;self.chunk_size as usize];self.chunk_size as usize];self.chunk_size as usize],
+					should_remove: false
+				}
+			);
 		}
 	
-		self.chunks.insert(
-			ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}, 
-			VoxelChunk{
-				data: vec![vec![vec![0u16;self.chunk_size as usize];self.chunk_size as usize];self.chunk_size as usize],
-				should_remove: false
-			}
-		);
+		
 	
 //		for x in 0..self.chunk_size{
 //			for y in 0..self.chunk_size{
