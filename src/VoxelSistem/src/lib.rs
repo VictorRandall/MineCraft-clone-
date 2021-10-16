@@ -1,19 +1,24 @@
 use std;
+use rand::Rng;	
 use gdnative::prelude::*;
 use gdnative::api::{ArrayMesh, Mesh, MeshInstance, OpenSimplexNoise, SurfaceTool, Spatial, StaticBody, Material};
 
+#[derive(Clone)]
 struct Vertex{
 	uv: Vector2,
 	v: Vector3
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy)]
 struct ChunkPos{
 	x: i32,
 	y: i32,
 	z: i32
 }
 
+//#[derive(NativeClass, Debug)]
+//#[inherit(Reference)]
+#[derive(Clone)]
 struct Voxel{
 	mesh: Option<Vec<Vec<Vertex>>>,
 	solid: bool,
@@ -21,17 +26,27 @@ struct Voxel{
 	data: Vec<String>
 }
 
-struct VoxelChunk{
-	data: Vec<Vec<Vec<u16>>>,
-	should_remove: bool
-}
+//#[methods]
+//impl Voxel{
+//	#[export]
+//	fn new() -> Instance<Voxel, Unique>{
+//		let inst = Voxel{
+//			mesh: Option<Vec<Vec<Vertex>>>,
+//			solid: bool,
+//			name: String,
+//			data: Vec<String>
+//		};
+//	}
+//}
 
 #[derive(NativeClass)]
 #[inherit(Spatial)]
 pub struct VoxelSistem{
 	block_types: Vec<Voxel>,
 	chunks: std::collections::HashMap<ChunkPos, VoxelChunk>,
-	chunk_size: u8
+	#[property]
+	chunk_size: u8,
+	seed: i64
 }
 
 #[methods]
@@ -179,13 +194,19 @@ impl VoxelSistem {
 				},
 			],
 			chunks: std::collections::HashMap::<ChunkPos, VoxelChunk>::new(),
-			chunk_size: 16u8
+			chunk_size: 16u8,
+			seed: rand::thread_rng().gen()
 		}
 	}
 
 	#[export]
 	fn _ready(&self, _owner: &Spatial) {
 		godot_print!("Hello, world.");
+	}
+	
+	#[export]
+	fn _process(&self, _owner: &Spatial, _delta: f64){
+		godot_print!("Yeet!");
 	}
 	
 	#[export]
@@ -208,13 +229,12 @@ impl VoxelSistem {
 		self.chunks.get_mut(&ChunkPos{x:cpos[0],y:cpos[1],z:cpos[2]}).unwrap().data[bpos[0] as usize][bpos[1] as usize][bpos[2] as usize] = id;
 	}
 	
-	fn build_chunk(&mut self, pos: Vector3){
+	fn build_chunk(&mut self, owner: &Spatial, pos: Vector3){
 		if !self.chunks.contains_key(&ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}){
-			let mut chunk: VoxelChunk = VoxelChunk{
-										data: vec![vec![vec![0u16;self.chunk_size as usize];self.chunk_size as usize];self.chunk_size as usize],
-										should_remove: false
-									};
+			let mut chunk: VoxelChunk = VoxelChunk::new(self.seed, self.chunk_size, &self.block_types);
+			let cpos: &ChunkPos = &ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32};
 			
+			let meshinst = MeshInstance::new();
 			let noise = OpenSimplexNoise::new();
 			
 			for x in 0..self.chunk_size{
@@ -228,21 +248,42 @@ impl VoxelSistem {
 			}
 			
 			self.chunks.insert(
-				ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}, 
-				chunk
+				*cpos, 
+				*&chunk
 			);
+			
+			meshinst.set_mesh(&chunk.build_chunk_mesh(*cpos));
+			meshinst.set_translation(Vector3::new(*&cpos.x as f32, *&cpos.y as f32, *&cpos.z as f32,));
+			meshinst.set_name(format!("chunk {} {} {}", *&cpos.x, *&cpos.y, *&cpos.z));
+			meshinst.create_trimesh_collision();
+			owner.add_child(meshinst,true);
 		}
 	
 		
 	
 	}
 	
-	
-	fn _process(&self, _owner: &Spatial, _delta: f64){
-		
+}
+
+#[derive(Clone)]
+pub struct VoxelChunk{
+	data: Vec<Vec<Vec<u16>>>,
+	block_types: Vec<Voxel>,
+	should_remove: bool,
+	size: u8,
+	seed: i64
+}
+
+impl VoxelChunk{
+	fn new(nseed: i64, size: u8, btypes: &Vec<Voxel>) -> Self{
+		VoxelChunk{
+			data: vec![vec![vec![0u16;size as usize];size as usize];size as usize],
+			block_types: btypes.to_vec(),
+			should_remove: false,
+			size: size,
+			seed: nseed
+		}
 	}
-	
-	
 	
 	fn build_chunk_mesh(&self,pos: ChunkPos) -> gdnative::Ref<ArrayMesh>{
 		let st = SurfaceTool::new();
@@ -250,14 +291,13 @@ impl VoxelSistem {
 		st.begin(Mesh::PRIMITIVE_TRIANGLES);
 //		st.begin(Mesh::PRIMITIVE_LINES);
         
-        for x in 0..self.chunk_size{
-        	for y in 0..self.chunk_size{
-        		for z in 0..self.chunk_size{
-        		//TODO: build_voxel_mesh() should be able to get the mesh from the list of Voxel structs
+        for x in 0..self.size{
+        	for y in 0..self.size{
+        		for z in 0..self.size{
 					self.build_voxel_mesh(
 						&st,
 						Vector3::new(x as f32,y as f32,z as f32),
-						self.chunks.get(&ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}).unwrap().data[x as usize][y as usize][z as usize],
+						self.get_voxel(Vector3::new(x as f32,y as f32,z as f32)),
 //						&self.block_types[
 //							self.chunks.get(&ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}).unwrap().data[x as usize][y as usize][z as usize] as usize
 //						],
@@ -271,63 +311,67 @@ impl VoxelSistem {
             GodotString::from_str("Resource"), false).unwrap().cast::<Material>().unwrap());
         st.generate_normals(false);
         
-        return st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT).unwrap()
+        return st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT).expect("couldnt add mesh to node")
 	}
 	
 	fn build_voxel_mesh(&self,st:&Ref<SurfaceTool, Unique>, pos:Vector3, id: u16, size:&Vec<u8>){
-    	match self.block_types[id as usize].mesh{
-    		None => { return },
-    		Some => {
-    			if self.get_cvoxel(Vector3::new(pos.x,pos.y + 1.0f32,pos.z)) == 0u16{
-					for v in &self.block_types[id as usize].mesh[0]{//top
-						st.add_uv(Vector2::new(v.uv.x / size[0] as f32,v.uv.y / size[0] as f32));
-						st.add_vertex(Vector3::new(v.vertex.x + pos.x, v.vertex.y + pos.y, v.vertex.z + pos.z));
-					}
-				}
-				
-				if self.get_cvoxel(Vector3::new(pos.x,pos.y - 1.0f32,pos.z)) == 0u16{
-					for v in &self.block_types[id as usize].mesh[1]{//botton
-						st.add_uv(Vector2::new(v.uv.x / size[0] as f32,v.uv.y / size[0] as f32));
-						st.add_vertex(Vector3::new(v.vertex.x + pos.x, v.vertex.y + pos.y, v.vertex.z + pos.z));
-					}
-				}
-				
-				if self.get_cvoxel(Vector3::new(pos.x + 1.0f32,pos.y,pos.z)) == 0u16{
-					for v in &self.block_types[id as usize].mesh[2]{//right
-						st.add_uv(Vector2::new(v.uv.x / size[0] as f32,v.uv.y / size[0] as f32));
-						st.add_vertex(Vector3::new(v.vertex.x + pos.x, v.vertex.y + pos.y, v.vertex.z + pos.z));
-					}
-				}
-				
-				if self.get_cvoxel(Vector3::new(pos.x - 1.0f32,pos.y,pos.z)) == 0u16{
-					for v in &self.block_types[id as usize].mesh[3]{//left
-						st.add_uv(Vector2::new(v.uv.x / size[0] as f32,v.uv.y / size[0] as f32));
-						st.add_vertex(Vector3::new(v.vertex.x + pos.x, v.vertex.y + pos.y, v.vertex.z + pos.z));
-					}
-				}
-				
-				if self.get_cvoxel(Vector3::new(pos.x,pos.y,pos.z + 1.0f32)) == 0u16{
-					for v in &self.block_types[id as usize].mesh[4]{//back
-						st.add_uv(Vector2::new(v.uv.x / size[0] as f32,v.uv.y / size[0] as f32));
-						st.add_vertex(Vector3::new(v.vertex.x + pos.x, v.vertex.y + pos.y, v.vertex.z + pos.z));
-					}
-				}
-				
-				if self.get_cvoxel(Vector3::new(pos.x,pos.y,pos.z - 1.0f32)) == 0u16{
-					for v in &self.block_types[id as usize].mesh[5]{//front
-						st.add_uv(Vector2::new(v.uv.x / size[0] as f32,v.uv.y / size[0] as f32));
-						st.add_vertex(Vector3::new(v.vertex.x + pos.x, v.vertex.y + pos.y, v.vertex.z + pos.z));
-					}
-				}
-    		}
-    	}
+		if id == 0u16{ return }
+//    	match self.block_types[id as usize].mesh{
+//    		None => { return },
+//    		Some => {
+//    		}
+//    	}
+    	if self.get_voxel(Vector3::new(pos.x,pos.y + 1.0f32,pos.z)) == 0u16{
+			for v in &self.block_types[id as usize].mesh.as_ref().expect("this voxel type doesnt have a mesh for the top side")[0]{//top
+				st.add_uv(Vector2::new(v.uv.x / size[0] as f32,v.uv.y / size[0] as f32));
+				st.add_vertex(Vector3::new(v.v.x + pos.x, v.v.y + pos.y, v.v.z + pos.z));
+			}
+		}
+		
+		if self.get_voxel(Vector3::new(pos.x,pos.y - 1.0f32,pos.z)) == 0u16{
+			for v in &self.block_types[id as usize].mesh.as_ref().expect("this voxel type doesnt have a mesh for the botton side")[1]{//botton
+				st.add_uv(Vector2::new(v.uv.x / size[0] as f32,v.uv.y / size[0] as f32));
+				st.add_vertex(Vector3::new(v.v.x + pos.x, v.v.y + pos.y, v.v.z + pos.z));
+			}
+		}
+		
+		if self.get_voxel(Vector3::new(pos.x + 1.0f32,pos.y,pos.z)) == 0u16{
+			for v in &self.block_types[id as usize].mesh.as_ref().expect("this voxel type doesnt have a mesh for the right side")[2]{//right
+				st.add_uv(Vector2::new(v.uv.x / size[0] as f32,v.uv.y / size[0] as f32));
+				st.add_vertex(Vector3::new(v.v.x + pos.x, v.v.y + pos.y, v.v.z + pos.z));
+			}
+		}
+		
+		if self.get_voxel(Vector3::new(pos.x - 1.0f32,pos.y,pos.z)) == 0u16{
+			for v in &self.block_types[id as usize].mesh.as_ref().expect("this voxel type doesnt have a mesh for the left side")[3]{//left
+				st.add_uv(Vector2::new(v.uv.x / size[0] as f32,v.uv.y / size[0] as f32));
+				st.add_vertex(Vector3::new(v.v.x + pos.x, v.v.y + pos.y, v.v.z + pos.z));
+			}
+		}
+		
+		if self.get_voxel(Vector3::new(pos.x,pos.y,pos.z + 1.0f32)) == 0u16{
+			for v in &self.block_types[id as usize].mesh.as_ref().expect("this voxel type doesnt have a mesh for the back side")[4]{//back
+				st.add_uv(Vector2::new(v.uv.x / size[0] as f32,v.uv.y / size[0] as f32));
+				st.add_vertex(Vector3::new(v.v.x + pos.x, v.v.y + pos.y, v.v.z + pos.z));
+			}
+		}
+		
+		if self.get_voxel(Vector3::new(pos.x,pos.y,pos.z - 1.0f32)) == 0u16{
+			for v in &self.block_types[id as usize].mesh.as_ref().expect("this voxel type doesnt have a mesh for the front side")[5]{//front
+				st.add_uv(Vector2::new(v.uv.x / size[0] as f32,v.uv.y / size[0] as f32));
+				st.add_vertex(Vector3::new(v.v.x + pos.x, v.v.y + pos.y, v.v.z + pos.z));
+			}
+		}
 	}
 	
-	fn get_cvoxel(&self,pos: Vector3, cpos: ChunkPos){
-		//FIXME: since VoxelChunk doesnt have functions anymore, this function needs to get the chunk data to do this
-		if pos.x < self.chunk_size as f32 && pos.x > 0.0f32 && pos.y < self.chunk_size as f32 && pos.y > 0.0f32 && pos.z < self.chunk_size as f32 && pos.z > 0.0f32 {
-			self.chunks_data[pos.x as usize][pos.y as usize][pos.z as usize]
+	pub fn get_voxel(&self,pos: Vector3) -> u16{
+		if pos.x < self.size as f32 && pos.x > 0.0f32 && pos.y < self.size as f32 && pos.y > 0.0f32 && pos.z < self.size as f32 && pos.z > 0.0f32 {
+			self.data[pos.x as usize][pos.y as usize][pos.z as usize]
 		} else { 0u16 }
+	}
+	
+	pub fn set_voxel(&mut self,x:f32,y:f32,z:f32, id:u16){
+		self.data[x as usize][y as usize][z as usize] = id
 	}
 }
 
