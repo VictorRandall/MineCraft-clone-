@@ -180,9 +180,9 @@ impl HelloWorld {
 		    							]
 		    						];
     
-    	let st = SurfaceTool::new();
     
     	let size:Vec<u8> = vec![4u8,4u8];
+    	let st = SurfaceTool::new();
         
 		st.begin(Mesh::PRIMITIVE_TRIANGLES);
 //		st.begin(Mesh::PRIMITIVE_LINES);
@@ -209,7 +209,7 @@ impl HelloWorld {
         return st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT).unwrap()
     }
     
-    fn create_custom_voxel(&self,st:&Ref<SurfaceTool, Unique>, pos:Vector3, mesh:&Vec<Vec<Vertex>>, size:&Vec<u8>){
+    fn create_custom_voxel(&self,st:&Ref<SurfaceTool, Unique>, pos:Vector3, id: u16, size:&Vec<u8>){
     	if self.get_voxel(Vector3::new(pos.x,pos.y,pos.z)) == 0u16{ return }
     
 		if self.get_voxel(Vector3::new(pos.x,pos.y + 1.0f32,pos.z)) == 0u16{
