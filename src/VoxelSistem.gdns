@@ -1,5 +1,10 @@
-[gd_resource type="NativeScript" format=2]
+[gd_resource type="NativeScript" load_steps=2 format=2]
+
+[sub_resource type="GDNativeLibrary" id=1]
+entry/X11.64 = "res://src/VoxelSistem/target/release/libvoxel_sistem.so"
+dependency/X11.64 = [  ]
 
 [resource]
 resource_name = "VoxelSistem"
 class_name = "VoxelSistem"
+library = SubResource( 1 )
