@@ -232,7 +232,7 @@ impl VoxelSistem {
 	fn build_chunk(&mut self, owner: &Spatial, pos: Vector3){
 		if !self.chunks.contains_key(&ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}){
 			let mut chunk: VoxelChunk = VoxelChunk::new(self.seed, self.chunk_size, &self.block_types);
-			let cpos: &ChunkPos = &ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32};
+			let cpos: ChunkPos = &ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32};
 			
 			let meshinst = MeshInstance::new();
 			let noise = OpenSimplexNoise::new();
@@ -248,8 +248,8 @@ impl VoxelSistem {
 			}
 			
 			self.chunks.insert(
-				*cpos, 
-				*&chunk
+				cpos, 
+				chunk
 			);
 			
 			meshinst.set_mesh(&chunk.build_chunk_mesh(*cpos));
@@ -258,11 +258,7 @@ impl VoxelSistem {
 			meshinst.create_trimesh_collision();
 			owner.add_child(meshinst,true);
 		}
-	
-		
-	
 	}
-	
 }
 
 #[derive(Clone)]
