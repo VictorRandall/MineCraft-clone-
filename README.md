@@ -23,5 +23,5 @@ unsafe {
 //?: how to join/transform two (or more) strings/int/float/etc in one string
 format!()
 //NOTE:only use "st.add_smooth_group(true);" when making smooth voxels
-//NOTE:godot crash when using "#[register_with(Self::register_properties)]"
+//NOTE:godot crashes when using "#[register_with(Self::register_properties)]"
 ```
