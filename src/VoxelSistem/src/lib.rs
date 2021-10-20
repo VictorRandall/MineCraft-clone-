@@ -200,13 +200,14 @@ impl VoxelSistem {
 	}
 
 	#[export]
-	fn _ready(&self, _owner: &Spatial) {
+	fn _ready(&mut self, owner: &Spatial) {
 		godot_print!("Hello, world.");
+		self.build_chunk(owner, Vector3::new(0f32,0f32,0f32))
 	}
 	
 	#[export]
 	fn _process(&self, _owner: &Spatial, _delta: f64){
-		godot_print!("Yeet!");
+//		godot_print!("Yeet!");
 	}
 	
 	#[export]
@@ -218,24 +219,26 @@ impl VoxelSistem {
 		];
 		
 		let bpos: Vec<f32> = vec![
-			pos.x.floor() % self.chunk_size as f32,
-			pos.y.floor() % self.chunk_size as f32,
-			pos.z.floor() % self.chunk_size as f32
+			(pos.x.floor() % self.chunk_size as f32) as i32,
+			(pos.y.floor() % self.chunk_size as f32) as i32,
+			(pos.z.floor() % self.chunk_size as f32) as i32
 		];
 		
 		godot_print!("the chunk pos is Vector3({},{},{})\nthe voxel pos is Vector3({},{},{})",
 					cpos[0],cpos[1],cpos[2],  
 					bpos[0],bpos[1],bpos[2]);
 		self.chunks.get_mut(&ChunkPos{x:cpos[0],y:cpos[1],z:cpos[2]}).unwrap().data[bpos[0] as usize][bpos[1] as usize][bpos[2] as usize] = id;
+		
 	}
 	
 	fn build_chunk(&mut self, owner: &Spatial, pos: Vector3){
 		if !self.chunks.contains_key(&ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}){
-			let mut chunk: VoxelChunk = VoxelChunk::new(self.seed, self.chunk_size, &self.block_types);
-			let cpos: ChunkPos = &ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32};
+			let mut chunk: VoxelChunk = VoxelChunk::new(self.chunk_size, &self.block_types);
+//			let cpos: ChunkPos = &ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32};
 			
 			let meshinst = MeshInstance::new();
 			let noise = OpenSimplexNoise::new();
+			noise.set_seed(self.seed);
 			
 			for x in 0..self.chunk_size{
 				for y in 0..self.chunk_size{
@@ -247,16 +250,71 @@ impl VoxelSistem {
 				}
 			}
 			
-			self.chunks.insert(
-				cpos, 
-				chunk
-			);
+			let st = SurfaceTool::new();
+
+			st.begin(Mesh::PRIMITIVE_TRIANGLES);
+	//		st.begin(Mesh::PRIMITIVE_LINES);
+		    
+		    for x in 0..self.chunk_size{
+		    	for y in 0..self.chunk_size{
+		    		for z in 0..self.chunk_size{
+						chunk.build_voxel_mesh(
+							&st,
+							Vector3::new(x as f32,y as f32,z as f32),
+							chunk.get_voxel(Vector3::new(x as f32,y as f32,z as f32)),
+							&vec![4u8,4u8]);
+		    		}
+		    	}
+			}
 			
-			meshinst.set_mesh(&chunk.build_chunk_mesh(*cpos));
-			meshinst.set_translation(Vector3::new(*&cpos.x as f32, *&cpos.y as f32, *&cpos.z as f32,));
-			meshinst.set_name(format!("chunk {} {} {}", *&cpos.x, *&cpos.y, *&cpos.z));
+		    st.set_material(ResourceLoader::godot_singleton().load(
+		        GodotString::from_str("res://assets/new_spatialmaterial.tres"),
+		        GodotString::from_str("Resource"), false).unwrap().cast::<Material>().unwrap());
+		    st.generate_normals(false);
+		    
+//			meshinst.set_mesh(&chunk.build_chunk_mesh(ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}));
+			meshinst.set_mesh(st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT).expect("couldnt add mesh to node"));
+			meshinst.set_translation(Vector3::new(pos.x - 1f32, pos.y - 1f32, pos.z - 1f32,));
+			meshinst.set_name(format!("chunk {} {} {}", pos.x as i32, pos.y as i32, pos.z as i32));
 			meshinst.create_trimesh_collision();
 			owner.add_child(meshinst,true);
+			self.chunks.insert(
+				ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}, 
+				chunk
+			);
+		}else{
+			let chunk = self.chunks.get_mut(&ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32})
+				.expect("somehow, it checked that it has the chunk but it couldnt get the chunk");
+			
+			let st = SurfaceTool::new();
+
+			st.begin(Mesh::PRIMITIVE_TRIANGLES);
+	//		st.begin(Mesh::PRIMITIVE_LINES);
+		    
+		    for x in 0..self.chunk_size{
+		    	for y in 0..self.chunk_size{
+		    		for z in 0..self.chunk_size{
+						chunk.build_voxel_mesh(
+							&st,
+							Vector3::new(x as f32,y as f32,z as f32),
+							chunk.get_voxel(Vector3::new(x as f32,y as f32,z as f32)),
+							&vec![4u8,4u8]);
+		    		}
+		    	}
+			}
+			
+		    st.set_material(ResourceLoader::godot_singleton().load(
+		        GodotString::from_str("res://assets/new_spatialmaterial.tres"),
+		        GodotString::from_str("Resource"), false).unwrap().cast::<Material>().unwrap());
+		    st.generate_normals(false);
+		    
+		    unsafe {
+				owner.get_node(format!("chunk {} {} {}", pos.x as i32, pos.y as i32, pos.z as i32))
+					.unwrap().assume_safe().cast::<MeshInstance>().unwrap().set_mesh(
+						st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT)
+							.expect("couldnt add mesh to node")
+						);
+			};
 		}
 	}
 }
@@ -266,49 +324,21 @@ pub struct VoxelChunk{
 	data: Vec<Vec<Vec<u16>>>,
 	block_types: Vec<Voxel>,
 	should_remove: bool,
-	size: u8,
-	seed: i64
+	size: u8
 }
 
 impl VoxelChunk{
-	fn new(nseed: i64, size: u8, btypes: &Vec<Voxel>) -> Self{
+	fn new(size: u8, btypes: &Vec<Voxel>) -> Self{
 		VoxelChunk{
 			data: vec![vec![vec![0u16;size as usize];size as usize];size as usize],
 			block_types: btypes.to_vec(),
 			should_remove: false,
-			size: size,
-			seed: nseed
+			size: size
 		}
 	}
 	
-	fn build_chunk_mesh(&self,pos: ChunkPos) -> gdnative::Ref<ArrayMesh>{
-		let st = SurfaceTool::new();
-
-		st.begin(Mesh::PRIMITIVE_TRIANGLES);
-//		st.begin(Mesh::PRIMITIVE_LINES);
-        
-        for x in 0..self.size{
-        	for y in 0..self.size{
-        		for z in 0..self.size{
-					self.build_voxel_mesh(
-						&st,
-						Vector3::new(x as f32,y as f32,z as f32),
-						self.get_voxel(Vector3::new(x as f32,y as f32,z as f32)),
-//						&self.block_types[
-//							self.chunks.get(&ChunkPos{x: pos.x as i32,y: pos.y as i32,z: pos.z as i32}).unwrap().data[x as usize][y as usize][z as usize] as usize
-//						],
-						&vec![4u8,4u8]);
-        		}
-        	}
-		}
-		
-        st.set_material(ResourceLoader::godot_singleton().load(
-            GodotString::from_str("res://assets/new_spatialmaterial.tres"),
-            GodotString::from_str("Resource"), false).unwrap().cast::<Material>().unwrap());
-        st.generate_normals(false);
-        
-        return st.commit(gdnative::Null::null(), Mesh::ARRAY_COMPRESS_DEFAULT).expect("couldnt add mesh to node")
-	}
+//	fn build_chunk_mesh(&self,pos: ChunkPos) -> gdnative::Ref<ArrayMesh>{
+//	}
 	
 	fn build_voxel_mesh(&self,st:&Ref<SurfaceTool, Unique>, pos:Vector3, id: u16, size:&Vec<u8>){
 		if id == 0u16{ return }

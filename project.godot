@@ -21,8 +21,14 @@ _global_script_class_icons={
 [application]
 
 config/name="Hypton"
-run/main_scene="res://voxel_test.tscn"
+run/main_scene="res://VoxelWorld.tscn"
+boot_splash/image="res://icon.png"
+boot_splash/bg_color=Color( 0.141176, 0.141176, 0.141176, 1 )
 config/icon="res://icon.png"
+
+[debug]
+
+settings/stdout/verbose_stdout=true
 
 [importer_defaults]
 
@@ -127,6 +133,8 @@ gp_switch={
 
 [rendering]
 
+quality/driver/driver_name="GLES2"
+threads/thread_model=2
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
 environment/default_environment="res://default_env.tres"

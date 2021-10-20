@@ -8,6 +8,7 @@ var G: float = -10.0
 var cam_mov: float = 0.2
 
 var cam3person: bool = false
+var bpos:Vector3
 
 onready var cam: Spatial = $Spatial
 onready var raycast: RayCast = $Spatial/RayCast
@@ -59,10 +60,12 @@ func _process(delta: float) -> void:
 		
 		if Input.is_action_pressed("gp_break"):
 			get_node("..").set_voxel(Vector3(int(pos.x),int(pos.y),int(pos.z)), 0)
+			self.bpos = Vector3(int(pos.x),int(pos.y),int(pos.z))
 #			print(str(int(bpos.x)) + str(int(bpos.y)) + str(int(bpos.z)))
 		
 		if Input.is_action_just_pressed("gp_place"):
 			get_node("..").set_voxel(Vector3(int(pos.x + norm.x),int(pos.y + norm.y),int(pos.z + norm.z)), 1)
+			self.bpos = Vector3(int(pos.x + norm.x),int(pos.y + norm.y),int(pos.z + norm.z))
 #			print(str(int(bpos.x)) + str(int(bpos.y)) + str(int(bpos.z)))
 	
 #	print();
