@@ -12,13 +12,12 @@ size = Vector3( 100, 1, 100 )
 
 [node name="VoxelWorld" type="Spatial"]
 script = ExtResource( 1 )
-chunk_size = 15
+chunk_size = 16
 
 [node name="KinematicBody" parent="." instance=ExtResource( 2 )]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 100, 0 )
 
 [node name="StaticBody" type="StaticBody" parent="."]
-visible = false
 
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
 shape = SubResource( 1 )
