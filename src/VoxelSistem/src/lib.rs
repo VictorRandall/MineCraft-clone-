@@ -63,63 +63,63 @@ impl VoxelSistem {
 				Voxel{
 					mesh: Some(vec![
 		    							vec![//top
-											Vertex{uv: Vector2::new(1.0, 0.0), v: Vector3::new(0.0,1.0,0.0)},
-											Vertex{uv: Vector2::new(2.0, 0.0), v: Vector3::new(1.0,1.0,0.0)},
-											Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(0.0,1.0,1.0)},
+											Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(0.0,1.0,0.0)},
+											Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(1.0,1.0,0.0)},
+											Vertex{uv: Vector2::new(0.0, 2.0), v: Vector3::new(0.0,1.0,1.0)},
 											
-											Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(0.0,1.0,1.0)},
-											Vertex{uv: Vector2::new(2.0, 0.0), v: Vector3::new(1.0,1.0,0.0)},
-											Vertex{uv: Vector2::new(2.0, 1.0), v: Vector3::new(1.0,1.0,1.0)}
+											Vertex{uv: Vector2::new(0.0, 2.0), v: Vector3::new(0.0,1.0,1.0)},
+											Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(1.0,1.0,0.0)},
+											Vertex{uv: Vector2::new(1.0, 2.0), v: Vector3::new(1.0,1.0,1.0)}
 		    							],
 		    							
 		    							vec![//botton
-		    								Vertex{uv: Vector2::new(2.0, 0.0), v: Vector3::new(0.0,0.0,1.0)},
-		    								Vertex{uv: Vector2::new(3.0, 1.0), v: Vector3::new(1.0,0.0,0.0)},
-		    								Vertex{uv: Vector2::new(2.0, 1.0), v: Vector3::new(0.0,0.0,0.0)},
+		    								Vertex{uv: Vector2::new(2.0, 1.0), v: Vector3::new(0.0,0.0,1.0)},
+		    								Vertex{uv: Vector2::new(3.0, 2.0), v: Vector3::new(1.0,0.0,0.0)},
+		    								Vertex{uv: Vector2::new(2.0, 2.0), v: Vector3::new(0.0,0.0,0.0)},
 		    								
-		    								Vertex{uv: Vector2::new(3.0, 0.0), v: Vector3::new(1.0,0.0,1.0)},
-		    								Vertex{uv: Vector2::new(3.0, 1.0), v: Vector3::new(1.0,0.0,0.0)},
-		    								Vertex{uv: Vector2::new(2.0, 0.0), v: Vector3::new(0.0,0.0,1.0)}
+		    								Vertex{uv: Vector2::new(3.0, 1.0), v: Vector3::new(1.0,0.0,1.0)},
+		    								Vertex{uv: Vector2::new(3.0, 2.0), v: Vector3::new(1.0,0.0,0.0)},
+		    								Vertex{uv: Vector2::new(2.0, 1.0), v: Vector3::new(0.0,0.0,1.0)}
 		    							],
 		    							
 		    							vec![//right
-		    								Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(1.0,0.0,0.0)},
-		    								Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(1.0,0.0,1.0)},
-		    								Vertex{uv: Vector2::new(1.0, 0.0), v: Vector3::new(1.0,1.0,0.0)},
+		    								Vertex{uv: Vector2::new(1.0, 2.0), v: Vector3::new(1.0,0.0,0.0)},
+		    								Vertex{uv: Vector2::new(0.0, 2.0), v: Vector3::new(1.0,0.0,1.0)},
+		    								Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(1.0,1.0,0.0)},
 		    								
-		    								Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(1.0,0.0,1.0)},
-		    								Vertex{uv: Vector2::new(0.0, 0.0), v: Vector3::new(1.0,1.0,1.0)},
-		    								Vertex{uv: Vector2::new(1.0, 0.0), v: Vector3::new(1.0,1.0,0.0)}
+		    								Vertex{uv: Vector2::new(0.0, 2.0), v: Vector3::new(1.0,0.0,1.0)},
+		    								Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(1.0,1.0,1.0)},
+		    								Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(1.0,1.0,0.0)}
 		    							],
 		    							
 		    							vec![//left
-		    								Vertex{uv: Vector2::new(0.0, 0.0), v: Vector3::new(0.0,1.0,0.0)},
-		    								Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(0.0,0.0,1.0)},
-		    								Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(0.0,0.0,0.0)},
+		    								Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(0.0,1.0,0.0)},
+		    								Vertex{uv: Vector2::new(1.0, 2.0), v: Vector3::new(0.0,0.0,1.0)},
+		    								Vertex{uv: Vector2::new(0.0, 2.0), v: Vector3::new(0.0,0.0,0.0)},
 		    								
-		    								Vertex{uv: Vector2::new(1.0, 0.0), v: Vector3::new(0.0,1.0,1.0)},
-		    								Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(0.0,0.0,1.0)},
-		    								Vertex{uv: Vector2::new(0.0, 0.0), v: Vector3::new(0.0,1.0,0.0)}
+		    								Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(0.0,1.0,1.0)},
+		    								Vertex{uv: Vector2::new(1.0, 2.0), v: Vector3::new(0.0,0.0,1.0)},
+		    								Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(0.0,1.0,0.0)}
 		    							],
 		    							
 		    							vec![//back
-											Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(0.0,0.0,1.0)},
-											Vertex{uv: Vector2::new(0.0, 0.0), v: Vector3::new(0.0,1.0,1.0)},
-											Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(1.0,0.0,1.0)},
+											Vertex{uv: Vector2::new(0.0, 2.0), v: Vector3::new(0.0,0.0,1.0)},
+											Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(0.0,1.0,1.0)},
+											Vertex{uv: Vector2::new(1.0, 2.0), v: Vector3::new(1.0,0.0,1.0)},
 											
-											Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(1.0,0.0,1.0)},
-											Vertex{uv: Vector2::new(0.0, 0.0), v: Vector3::new(0.0,1.0,1.0)},
-											Vertex{uv: Vector2::new(1.0, 0.0), v: Vector3::new(1.0,1.0,1.0)},
+											Vertex{uv: Vector2::new(1.0, 2.0), v: Vector3::new(1.0,0.0,1.0)},
+											Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(0.0,1.0,1.0)},
+											Vertex{uv: Vector2::new(1.0, 2.0), v: Vector3::new(1.0,1.0,1.0)},
 		    							],
 		    							
 		    							vec![//front
-											Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(1.0,0.0,0.0)},
-											Vertex{uv: Vector2::new(1.0, 0.0), v: Vector3::new(0.0,1.0,0.0)},
-											Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(0.0,0.0,0.0)},
+											Vertex{uv: Vector2::new(0.0, 2.0), v: Vector3::new(1.0,0.0,0.0)},
+											Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(0.0,1.0,0.0)},
+											Vertex{uv: Vector2::new(1.0, 2.0), v: Vector3::new(0.0,0.0,0.0)},
 											
-											Vertex{uv: Vector2::new(0.0, 0.0), v: Vector3::new(1.0,1.0,0.0)},
-											Vertex{uv: Vector2::new(1.0, 0.0), v: Vector3::new(0.0,1.0,0.0)},
-											Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(1.0,0.0,0.0)},
+											Vertex{uv: Vector2::new(0.0, 1.0), v: Vector3::new(1.0,1.0,0.0)},
+											Vertex{uv: Vector2::new(1.0, 1.0), v: Vector3::new(0.0,1.0,0.0)},
+											Vertex{uv: Vector2::new(0.0, 2.0), v: Vector3::new(1.0,0.0,0.0)},
 		    							]
 		    						]),
 					solid: false,
@@ -317,7 +317,7 @@ impl VoxelSistem {
 			for x in 0..self.chunk_size{
 				for y in 0..self.chunk_size{
 					for z in 0..self.chunk_size{
-						if noise.get_noise_3d(x as f64 + pos.x as f64, y as f64 + pos.y as f64, z as f64 + pos.z as f64)*30f64+20f64 > y as f64 + pos.y as f64{
+						if noise.get_noise_3d(x as f64 + pos.x as f64, y as f64 + pos.y as f64, z as f64 + pos.z as f64)*50f64+40f64 > y as f64 + pos.y as f64{
 							chunk.set_voxel(Vector3::new(x as f32, y as f32, z as f32), 1u16);
 							chunk.set_voxel(Vector3::new(x as f32, y as f32 - 1f32, z as f32), 2u16);
 							chunk.set_voxel(Vector3::new(x as f32, y as f32 - 4f32, z as f32), 3u16);
